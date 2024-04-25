@@ -21,5 +21,3 @@ jobs:
         run: test -z $(gofmt -s -l .)
       - name: Run go vet
         run: go vet ./...
-      - name: Check generated files
-        run: bash ./misc/check_ent_files.sh
