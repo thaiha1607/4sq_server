@@ -1,0 +1,25 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[{go.mod,go.sum,*.go}]
+indent_style = tab
+indent_size = 4
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.{cmd,[cC][mM][dD]}]
+end_of_line = crlf
+
+[*.{bat,[bB][aA][tT]}]
+end_of_line = crlf
+
+[Dockerfile]
+indent_size = 4
