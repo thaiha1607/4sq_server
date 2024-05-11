@@ -70,6 +70,41 @@
           "maxSelect": 8,
           "displayFields": null
         }
+      },
+      {
+        "system": false,
+        "id": "k2882wul",
+        "name": "role",
+        "type": "select",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "customer",
+            "salesperson",
+            "warehouse",
+            "delivery",
+            "management"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "apvyahoc",
+        "name": "work_unit_id",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "cr8iizw10m7kh1d",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
       }
     ],
     "indexes": [
@@ -869,10 +904,26 @@
     "schema": [
       {
         "system": false,
+        "id": "fkhvitus",
+        "name": "creator_id",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
         "id": "gkzf5szr",
         "name": "customer_id",
         "type": "relation",
-        "required": true,
+        "required": false,
         "presentable": false,
         "unique": false,
         "options": {
@@ -895,22 +946,6 @@
           "min": null,
           "max": null,
           "pattern": ""
-        }
-      },
-      {
-        "system": false,
-        "id": "fkhvitus",
-        "name": "creator_id",
-        "type": "relation",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "_pb_users_auth_",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
         }
       },
       {
@@ -1238,6 +1273,18 @@
           "maxSelect": 32,
           "displayFields": null
         }
+      },
+      {
+        "system": false,
+        "id": "fgfle0a0",
+        "name": "other_info",
+        "type": "json",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSize": 1048576
+        }
       }
     ],
     "indexes": [],
@@ -1455,6 +1502,22 @@
       },
       {
         "system": false,
+        "id": "n0xhvooy",
+        "name": "user_id",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
         "id": "rigsg6vw",
         "name": "shipment_date",
         "type": "date",
@@ -1503,75 +1566,6 @@
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "@request.auth.id != \"\"",
     "deleteRule": "@request.auth.id != \"\"",
-    "options": {}
-  },
-  {
-    "id": "xjqp3c48ychc1x9",
-    "name": "staff",
-    "type": "base",
-    "system": false,
-    "schema": [
-      {
-        "system": false,
-        "id": "mim17dvw",
-        "name": "user_id",
-        "type": "relation",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "_pb_users_auth_",
-          "cascadeDelete": true,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "jjo2e6pl",
-        "name": "role",
-        "type": "select",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "maxSelect": 1,
-          "values": [
-            "salesperson",
-            "warehouse",
-            "delivery",
-            "management"
-          ]
-        }
-      },
-      {
-        "system": false,
-        "id": "3zyljkul",
-        "name": "work_unit_id",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "cr8iizw10m7kh1d",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      }
-    ],
-    "indexes": [
-      "CREATE INDEX `idx_MYEzIcK` ON `staff` (`role`)",
-      "CREATE INDEX `idx_NlKJgz7` ON `staff` (`work_unit_id`)",
-      "CREATE UNIQUE INDEX `idx_f6q6PSv` ON `staff` (`user_id`)"
-    ],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
     "options": {}
   },
   {
@@ -1629,6 +1623,22 @@
       },
       {
         "system": false,
+        "id": "zkq0pdxq",
+        "name": "user_id",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": true,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
         "id": "s3n8jtve",
         "name": "work_unit_Id",
         "type": "relation",
@@ -1637,22 +1647,6 @@
         "unique": false,
         "options": {
           "collectionId": "cr8iizw10m7kh1d",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "qdbdmezw",
-        "name": "staff_id",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "xjqp3c48ychc1x9",
           "cascadeDelete": false,
           "minSelect": null,
           "maxSelect": 1,
