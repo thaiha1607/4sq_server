@@ -110,7 +110,7 @@
     "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
-    "createRule": "",
+    "createRule": "role = \"customer\"",
     "updateRule": "id = @request.auth.id",
     "deleteRule": "id = @request.auth.id",
     "options": {
@@ -276,9 +276,9 @@
     "indexes": [],
     "listRule": "",
     "viewRule": "",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
@@ -749,7 +749,7 @@
       {
         "system": false,
         "id": "slhgucri",
-        "name": "product_variety_id",
+        "name": "product_variant_id",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -822,7 +822,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_kMWgiUB` ON `order_items` (\n  `order_id`,\n  `product_variety_id`\n)"
+      "CREATE UNIQUE INDEX `idx_kMWgiUB` ON `order_items` (\n  `order_id`,\n  `product_variant_id`\n)"
     ],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
@@ -1039,7 +1039,7 @@
       {
         "system": false,
         "id": "p2rtadzg",
-        "name": "product_variety_id",
+        "name": "product_variant_id",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1082,18 +1082,18 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_5nWJlec` ON `product_qty` (\n  `work_unit_id`,\n  `product_variety_id`\n)"
+      "CREATE UNIQUE INDEX `idx_5nWJlec` ON `product_qty` (\n  `work_unit_id`,\n  `product_variant_id`\n)"
     ],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
     "id": "upkshg4h89ndt95",
-    "name": "product_varieties",
+    "name": "product_variants",
     "type": "base",
     "system": false,
     "schema": [
@@ -1131,13 +1131,13 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_SNtaGj4` ON `product_varieties` (\n  `product_id`,\n  `colour_id`\n)"
+      "CREATE UNIQUE INDEX `idx_SNtaGj4` ON `product_variants` (\n  `product_id`,\n  `colour_id`\n)"
     ],
     "listRule": "",
     "viewRule": "",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
@@ -1242,9 +1242,9 @@
     "indexes": [],
     "listRule": "",
     "viewRule": "",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
@@ -1318,11 +1318,11 @@
       }
     ],
     "indexes": [],
-    "listRule": null,
-    "viewRule": null,
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
+    "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
@@ -1608,9 +1608,9 @@
     ],
     "listRule": "",
     "viewRule": "",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
@@ -1716,16 +1716,16 @@
       }
     ],
     "indexes": [],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
     "id": "cr8iizw10m7kh1d",
-    "name": "work_unit_info",
+    "name": "work_unit",
     "type": "base",
     "system": false,
     "schema": [
@@ -1802,9 +1802,9 @@
     "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   }
 ]
