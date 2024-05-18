@@ -73,7 +73,7 @@
       },
       {
         "system": false,
-        "id": "k2882wul",
+        "id": "upj9eszj",
         "name": "role",
         "type": "select",
         "required": true,
@@ -85,8 +85,8 @@
             "customer",
             "salesperson",
             "warehouse",
-            "delivery",
-            "management"
+            "shipper",
+            "manager"
           ]
         }
       },
@@ -107,9 +107,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_H6rtlBW` ON `users` (`phone`)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
     "createRule": "",
@@ -474,20 +472,6 @@
       },
       {
         "system": false,
-        "id": "grrtgg9g",
-        "name": "note",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
-        }
-      },
-      {
-        "system": false,
         "id": "g1lqvenw",
         "name": "type",
         "type": "select",
@@ -514,22 +498,6 @@
       },
       {
         "system": false,
-        "id": "4jbeu6ze",
-        "name": "status_id",
-        "type": "relation",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "ldiepkv7gnn4nrr",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
         "id": "w4lktdsd",
         "name": "payment_method",
         "type": "select",
@@ -548,6 +516,36 @@
             "check",
             "other"
           ]
+        }
+      },
+      {
+        "system": false,
+        "id": "4jbeu6ze",
+        "name": "status_id",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "ldiepkv7gnn4nrr",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "grrtgg9g",
+        "name": "note",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
         }
       }
     ],
@@ -766,38 +764,6 @@
       },
       {
         "system": false,
-        "id": "z00b6nzv",
-        "name": "src_unit_id",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "cr8iizw10m7kh1d",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "bypujktg",
-        "name": "dst_unit_id",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "cr8iizw10m7kh1d",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
         "id": "iispyjhp",
         "name": "qty",
         "type": "number",
@@ -826,20 +792,6 @@
       },
       {
         "system": false,
-        "id": "doi97njz",
-        "name": "note",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
-        }
-      },
-      {
-        "system": false,
         "id": "8xvzwqj6",
         "name": "status_id",
         "type": "relation",
@@ -852,6 +804,20 @@
           "minSelect": null,
           "maxSelect": 1,
           "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "doi97njz",
+        "name": "note",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
         }
       }
     ],
@@ -936,16 +902,37 @@
       },
       {
         "system": false,
-        "id": "brnqocq4",
-        "name": "note",
-        "type": "text",
+        "id": "vfmtk9sh",
+        "name": "type",
+        "type": "select",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "sale",
+            "return",
+            "exchange",
+            "transfer",
+            "other"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "bangvd1a",
+        "name": "address_id",
+        "type": "relation",
         "required": false,
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
+          "collectionId": "7uhp3ed4afuq9uc",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
         }
       },
       {
@@ -964,21 +951,28 @@
       },
       {
         "system": false,
-        "id": "vfmtk9sh",
-        "name": "type",
-        "type": "select",
-        "required": true,
+        "id": "g8qw5h8v",
+        "name": "is_internal",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
+      },
+      {
+        "system": false,
+        "id": "7i8klswm",
+        "name": "parent_order_id",
+        "type": "relation",
+        "required": false,
         "presentable": false,
         "unique": false,
         "options": {
+          "collectionId": "2stc36eglv3voqe",
+          "cascadeDelete": false,
+          "minSelect": null,
           "maxSelect": 1,
-          "values": [
-            "sale",
-            "return",
-            "exchange",
-            "transfer",
-            "other"
-          ]
+          "displayFields": null
         }
       },
       {
@@ -999,8 +993,8 @@
       },
       {
         "system": false,
-        "id": "bj9p1u12",
-        "name": "internal_note",
+        "id": "brnqocq4",
+        "name": "note",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -1009,48 +1003,6 @@
           "min": null,
           "max": null,
           "pattern": ""
-        }
-      },
-      {
-        "system": false,
-        "id": "g8qw5h8v",
-        "name": "is_internal",
-        "type": "bool",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {}
-      },
-      {
-        "system": false,
-        "id": "bangvd1a",
-        "name": "address_id",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "7uhp3ed4afuq9uc",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "7i8klswm",
-        "name": "parent_order_id",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "2stc36eglv3voqe",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
         }
       }
     ],
@@ -1296,6 +1248,84 @@
     "options": {}
   },
   {
+    "id": "6utk07e3r3pigtn",
+    "name": "shipment_assignments",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "v2apkj1h",
+        "name": "shipment_id",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "0fvjhfcs9ig8nd8",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "ypn2pxat",
+        "name": "user_id",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "gcdvlyq8",
+        "name": "status",
+        "type": "select",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSelect": 1,
+          "values": [
+            "pending",
+            "accepted",
+            "rejected"
+          ]
+        }
+      },
+      {
+        "system": false,
+        "id": "mqtaqezd",
+        "name": "note",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      }
+    ],
+    "indexes": [],
+    "listRule": null,
+    "viewRule": null,
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "options": {}
+  },
+  {
     "id": "fmcnt4mzn1mhgnv",
     "name": "shipment_history",
     "type": "base",
@@ -1502,22 +1532,6 @@
       },
       {
         "system": false,
-        "id": "n0xhvooy",
-        "name": "user_id",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "_pb_users_auth_",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
         "id": "rigsg6vw",
         "name": "shipment_date",
         "type": "date",
@@ -1527,20 +1541,6 @@
         "options": {
           "min": "",
           "max": ""
-        }
-      },
-      {
-        "system": false,
-        "id": "b1slbcyj",
-        "name": "note",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
         }
       },
       {
@@ -1557,6 +1557,20 @@
           "minSelect": null,
           "maxSelect": 1,
           "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "b1slbcyj",
+        "name": "note",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
         }
       }
     ],
@@ -1631,7 +1645,7 @@
         "unique": false,
         "options": {
           "collectionId": "_pb_users_auth_",
-          "cascadeDelete": true,
+          "cascadeDelete": false,
           "minSelect": null,
           "maxSelect": 1,
           "displayFields": null
@@ -1640,9 +1654,25 @@
       {
         "system": false,
         "id": "s3n8jtve",
-        "name": "work_unit_Id",
+        "name": "src_unit_Id",
         "type": "relation",
         "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "cr8iizw10m7kh1d",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "qrhladq0",
+        "name": "dst_unit_id",
+        "type": "relation",
+        "required": false,
         "presentable": false,
         "unique": false,
         "options": {
