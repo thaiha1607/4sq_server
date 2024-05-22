@@ -57,22 +57,6 @@
       },
       {
         "system": false,
-        "id": "gpbrqxxm",
-        "name": "address_ids",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "7uhp3ed4afuq9uc",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 8,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
         "id": "upj9eszj",
         "name": "role",
         "type": "select",
@@ -261,7 +245,7 @@
       {
         "system": false,
         "id": "2kpyfojn",
-        "name": "color_code",
+        "name": "hex",
         "type": "text",
         "required": true,
         "presentable": false,
@@ -306,12 +290,12 @@
         "id": "lyqxzxxv",
         "name": "user1",
         "type": "relation",
-        "required": false,
+        "required": true,
         "presentable": false,
         "unique": false,
         "options": {
           "collectionId": "_pb_users_auth_",
-          "cascadeDelete": false,
+          "cascadeDelete": true,
           "minSelect": null,
           "maxSelect": 1,
           "displayFields": null
@@ -322,12 +306,12 @@
         "id": "e93fbgnj",
         "name": "user2",
         "type": "relation",
-        "required": false,
+        "required": true,
         "presentable": false,
         "unique": false,
         "options": {
           "collectionId": "_pb_users_auth_",
-          "cascadeDelete": false,
+          "cascadeDelete": true,
           "minSelect": null,
           "maxSelect": 1,
           "displayFields": null
@@ -335,7 +319,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_sB3MCv1` ON `conversations` (\n  `title`,\n  `user1`,\n  `user2`\n)"
+      "CREATE UNIQUE INDEX `idx_YXJnYGk` ON `conversations` (\n  `title`,\n  `user1`,\n  `user2`\n)"
     ],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
@@ -475,7 +459,7 @@
         "id": "g1lqvenw",
         "name": "type",
         "type": "select",
-        "required": false,
+        "required": true,
         "presentable": false,
         "unique": false,
         "options": {
@@ -1054,20 +1038,6 @@
       },
       {
         "system": false,
-        "id": "zyrjbbsi",
-        "name": "price_per_unit",
-        "type": "number",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": 0,
-          "max": null,
-          "noDecimal": false
-        }
-      },
-      {
-        "system": false,
         "id": "drgo0oo1",
         "name": "qty",
         "type": "number",
@@ -1127,6 +1097,42 @@
           "minSelect": null,
           "maxSelect": 1,
           "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "ommutzif",
+        "name": "price",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "v892bwmk",
+        "name": "image",
+        "type": "file",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "mimeTypes": [
+            "image/jpeg",
+            "image/png",
+            "image/svg+xml",
+            "image/gif",
+            "image/webp"
+          ],
+          "thumbs": [],
+          "maxSelect": 1,
+          "maxSize": 5242880,
+          "protected": false
         }
       }
     ],
@@ -1191,7 +1197,7 @@
       {
         "system": false,
         "id": "hs9nkrzq",
-        "name": "images",
+        "name": "image",
         "type": "file",
         "required": false,
         "presentable": false,
@@ -1205,25 +1211,9 @@
             "image/webp"
           ],
           "thumbs": [],
-          "maxSelect": 32,
+          "maxSelect": 1,
           "maxSize": 5242880,
           "protected": false
-        }
-      },
-      {
-        "system": false,
-        "id": "nujr0nvu",
-        "name": "tag_ids",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "pvoq1blg7roxdzc",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 32,
-          "displayFields": null
         }
       },
       {
@@ -1297,8 +1287,12 @@
           "maxSelect": 1,
           "values": [
             "pending",
-            "accepted",
-            "rejected"
+            "assigned",
+            "in_progress",
+            "completed",
+            "cancelled",
+            "failed",
+            "other"
           ]
         }
       },
@@ -1583,34 +1577,76 @@
     "options": {}
   },
   {
-    "id": "pvoq1blg7roxdzc",
-    "name": "tags",
+    "id": "4mc1mg16zw31tum",
+    "name": "user_addresses",
     "type": "base",
     "system": false,
     "schema": [
       {
         "system": false,
-        "id": "squjtwfr",
-        "name": "name",
-        "type": "text",
+        "id": "yzgrtsmd",
+        "name": "user_id",
+        "type": "relation",
         "required": true,
         "presentable": false,
         "unique": false,
         "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": true,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "gfg23x5s",
+        "name": "address_id",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "7uhp3ed4afuq9uc",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "fqkslwn0",
+        "name": "friendly_name",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
           "min": null,
-          "max": 256,
+          "max": null,
           "pattern": ""
         }
+      },
+      {
+        "system": false,
+        "id": "3yjyqbnv",
+        "name": "is_default",
+        "type": "bool",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {}
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_YN2p04j` ON `tags` (`name`)"
+      "CREATE UNIQUE INDEX `idx_qSF5yWn` ON `user_addresses` (\n  `user_id`,\n  `address_id`\n)"
     ],
-    "listRule": "",
-    "viewRule": "",
-    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
-    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\"",
+    "updateRule": "@request.auth.id != \"\"",
+    "deleteRule": "@request.auth.id != \"\"",
     "options": {}
   },
   {
@@ -1695,8 +1731,12 @@
           "maxSelect": 1,
           "values": [
             "pending",
-            "accepted",
-            "rejected"
+            "assigned",
+            "in_progress",
+            "completed",
+            "cancelled",
+            "failed",
+            "other"
           ]
         }
       },
