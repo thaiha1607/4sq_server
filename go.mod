@@ -1,6 +1,6 @@
 module github.com/thaiha1607/4sq_server
 
-go 1.22.2
+go 1.22.3
 
 require github.com/pocketbase/pocketbase v0.22.12
 
