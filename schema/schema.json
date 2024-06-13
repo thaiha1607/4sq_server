@@ -94,7 +94,7 @@
     "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
-    "createRule": "role = \"customer\"",
+    "createRule": "role = \"customer\" || @request.auth.role = \"manager\"",
     "updateRule": "id = @request.auth.id",
     "deleteRule": "id = @request.auth.id",
     "options": {
@@ -215,8 +215,8 @@
       }
     ],
     "indexes": [],
-    "listRule": "",
-    "viewRule": "",
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "@request.auth.id != \"\"",
     "deleteRule": "@request.auth.id != \"\"",
@@ -288,7 +288,7 @@
       {
         "system": false,
         "id": "lyqxzxxv",
-        "name": "user1",
+        "name": "user_id_1",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -304,7 +304,7 @@
       {
         "system": false,
         "id": "e93fbgnj",
-        "name": "user2",
+        "name": "user_id_2",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -319,13 +319,13 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_YXJnYGk` ON `conversations` (\n  `title`,\n  `user1`,\n  `user2`\n)"
+      "CREATE UNIQUE INDEX `idx_YXJnYGk` ON `conversations` (\n  `title`,\n  `user_id_1`,\n  `user_id_2`\n)"
     ],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
+    "listRule": "user_id_1 = @request.auth.id || user_id_2 = @request.auth.id",
+    "viewRule": "user_id_1 = @request.auth.id || user_id_2 = @request.auth.id",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "updateRule": "user_id_1 = @request.auth.id || user_id_2 = @request.auth.id",
+    "deleteRule": null,
     "options": {}
   },
   {
@@ -642,11 +642,11 @@
       }
     ],
     "indexes": [],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "listRule": "conversation_id.user_id_1 = @request.auth.id || conversation_id.user_id_2 = @request.auth.id",
+    "viewRule": "conversation_id.user_id_1 = @request.auth.id || conversation_id.user_id_2 = @request.auth.id",
+    "createRule": "conversation_id.user_id_1 = @request.auth.id || conversation_id.user_id_2 = @request.auth.id",
+    "updateRule": "user_id = @request.auth.id",
+    "deleteRule": "user_id = @request.auth.id",
     "options": {}
   },
   {
@@ -749,7 +749,21 @@
       {
         "system": false,
         "id": "iispyjhp",
-        "name": "qty",
+        "name": "ordered_qty",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "moj8swah",
+        "name": "received_qty",
         "type": "number",
         "required": false,
         "presentable": false,
@@ -1227,6 +1241,22 @@
         "options": {
           "maxSize": 1048576
         }
+      },
+      {
+        "system": false,
+        "id": "s9hjg7jo",
+        "name": "tags_id",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "fpzmqrtemgkwcs6",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": null,
+          "displayFields": null
+        }
       }
     ],
     "indexes": [],
@@ -1577,6 +1607,37 @@
     "options": {}
   },
   {
+    "id": "fpzmqrtemgkwcs6",
+    "name": "tags",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "vfnvroid",
+        "name": "name",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_ZcKxUtS` ON `tags` (`name`)"
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.role = \"manager\"",
+    "updateRule": "@request.auth.role = \"manager\"",
+    "deleteRule": "@request.auth.role = \"manager\"",
+    "options": {}
+  },
+  {
     "id": "4mc1mg16zw31tum",
     "name": "user_addresses",
     "type": "base",
@@ -1642,11 +1703,11 @@
     "indexes": [
       "CREATE UNIQUE INDEX `idx_qSF5yWn` ON `user_addresses` (\n  `user_id`,\n  `address_id`\n)"
     ],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
+    "listRule": "user_id = @request.auth.id",
+    "viewRule": "user_id = @request.auth.id",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\"",
-    "deleteRule": "@request.auth.id != \"\"",
+    "updateRule": "user_id = @request.auth.id",
+    "deleteRule": "user_id = @request.auth.id",
     "options": {}
   },
   {
