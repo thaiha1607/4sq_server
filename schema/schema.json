@@ -68,8 +68,8 @@
     "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
-    "createRule": "@request.auth.role = \"manager\" || @request.data.role = \"customer\"",
-    "updateRule": "id = @request.auth.id",
+    "createRule": "@request.auth.role = \"manager\" || (@request.data.role:isset = true && @request.data.role = \"customer\")",
+    "updateRule": "(id = @request.auth.id && @request.data.role:isset = false) || @request.auth.role = \"manager\"",
     "deleteRule": "id = @request.auth.id || @request.auth.role = \"manager\"",
     "options": {
       "allowEmailAuth": true,
@@ -295,8 +295,8 @@
     "indexes": [
       "CREATE UNIQUE INDEX `idx_KAmzy3O` ON `comments` (\n  `product_id`,\n  `user_id`\n)"
     ],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
+    "listRule": "",
+    "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "user_id = @request.auth.id",
     "deleteRule": "user_id = @request.auth.id",
