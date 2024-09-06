@@ -22,7 +22,7 @@
       {
         "system": false,
         "id": "hy8epelv",
-        "name": "avatar_url",
+        "name": "avatarUrl",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -162,7 +162,7 @@
       {
         "system": false,
         "id": "pc4cgzj6",
-        "name": "zip_or_postcode",
+        "name": "zipOrPostcode",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -205,7 +205,7 @@
       {
         "system": false,
         "id": "2kpyfojn",
-        "name": "hex_code",
+        "name": "hexCode",
         "type": "text",
         "required": true,
         "presentable": false,
@@ -262,7 +262,7 @@
       {
         "system": false,
         "id": "jp5oc0o4",
-        "name": "product_id",
+        "name": "productId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -278,7 +278,7 @@
       {
         "system": false,
         "id": "ucczphj7",
-        "name": "user_id",
+        "name": "userId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -293,13 +293,13 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_KAmzy3O` ON `comments` (\n  `product_id`,\n  `user_id`\n)"
+      "CREATE UNIQUE INDEX `idx_KAmzy3O` ON `comments` (\n  `productId`,\n  `userId`\n)"
     ],
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "user_id = @request.auth.id",
-    "deleteRule": "user_id = @request.auth.id",
+    "updateRule": "userId = @request.auth.id",
+    "deleteRule": "userId = @request.auth.id",
     "options": {}
   },
   {
@@ -311,7 +311,7 @@
       {
         "system": false,
         "id": "zlmqq2nq",
-        "name": "conversation_id",
+        "name": "conversationId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -327,7 +327,7 @@
       {
         "system": false,
         "id": "5rzut65t",
-        "name": "user_id",
+        "name": "userId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -342,13 +342,13 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_PAsZnx1` ON `conversation_admins` (\n  `conversation_id`,\n  `user_id`\n)"
+      "CREATE UNIQUE INDEX `idx_PAsZnx1` ON `conversation_admins` (\n  `conversationId`,\n  `userId`\n)"
     ],
-    "listRule": "conversation_id.participants_via_conversation_id.user_id ?= @request.auth.id || conversation_id.conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
-    "viewRule": "conversation_id.participants_via_conversation_id.user_id ?= @request.auth.id || conversation_id.conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
-    "createRule": "@request.data.conversation_id.conversation_admins_via_conversation_id.id:length < 1 || @request.auth.conversation_admins_via_user_id.conversation_id ?= @request.data.conversation_id",
+    "listRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "viewRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "createRule": "@request.data.conversationId.conversation_admins_via_conversationId.id:length < 1 || @request.auth.conversation_admins_via_userId.conversationId ?= @request.data.conversationId",
     "updateRule": null,
-    "deleteRule": "user_id = @request.auth.id",
+    "deleteRule": "userId = @request.auth.id",
     "options": {}
   },
   {
@@ -373,11 +373,11 @@
       }
     ],
     "indexes": [],
-    "listRule": "participants_via_conversation_id.user_id ?= @request.auth.id || conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
-    "viewRule": "participants_via_conversation_id.user_id ?= @request.auth.id || conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
+    "listRule": "participants_via_conversationId.userId ?= @request.auth.id || conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "viewRule": "participants_via_conversationId.userId ?= @request.auth.id || conversation_admins_via_conversationId.userId ?= @request.auth.id",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
-    "deleteRule": "conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
+    "updateRule": "conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "deleteRule": "conversation_admins_via_conversationId.userId ?= @request.auth.id",
     "options": {}
   },
   {
@@ -417,7 +417,7 @@
       {
         "system": false,
         "id": "ypmd9q9s",
-        "name": "internal_order_id",
+        "name": "internalOrderId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -433,7 +433,7 @@
       {
         "system": false,
         "id": "ad5rzbhz",
-        "name": "order_item_id",
+        "name": "orderItemId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -448,7 +448,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_3TMYpsm` ON `internal_order_items` (\n  `internal_order_id`,\n  `order_item_id`\n)"
+      "CREATE UNIQUE INDEX `idx_3TMYpsm` ON `internal_order_items` (\n  `internalOrderId`,\n  `orderItemId`\n)"
     ],
     "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -499,7 +499,7 @@
       {
         "system": false,
         "id": "ukra4tgz",
-        "name": "status_code_id",
+        "name": "statusCodeId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -515,7 +515,7 @@
       {
         "system": false,
         "id": "uudmfia5",
-        "name": "root_order_id",
+        "name": "rootOrderId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -546,7 +546,7 @@
       {
         "system": false,
         "id": "1buavidk",
-        "name": "status_code",
+        "name": "statusCode",
         "type": "text",
         "required": true,
         "presentable": false,
@@ -573,7 +573,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_hl4uZdG` ON `invoice_status_codes` (`status_code`)"
+      "CREATE UNIQUE INDEX `idx_hl4uZdG` ON `invoice_status_codes` (`statusCode`)"
     ],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
@@ -591,7 +591,7 @@
       {
         "system": false,
         "id": "0qohuax0",
-        "name": "total_amount",
+        "name": "totalAmount",
         "type": "number",
         "required": true,
         "presentable": false,
@@ -631,7 +631,7 @@
       {
         "system": false,
         "id": "w4lktdsd",
-        "name": "payment_method",
+        "name": "paymentMethod",
         "type": "select",
         "required": true,
         "presentable": false,
@@ -667,7 +667,7 @@
       {
         "system": false,
         "id": "tejl6v7q",
-        "name": "order_id",
+        "name": "orderId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -683,7 +683,7 @@
       {
         "system": false,
         "id": "0elcxjzq",
-        "name": "status_code_id",
+        "name": "statusCodeId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -699,7 +699,7 @@
       {
         "system": false,
         "id": "xguda16b",
-        "name": "root_invoice_id",
+        "name": "rootInvoiceId",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -714,8 +714,8 @@
       }
     ],
     "indexes": [],
-    "listRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -761,7 +761,7 @@
       {
         "system": false,
         "id": "l30xjrgx",
-        "name": "participant_id",
+        "name": "participantId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -777,7 +777,7 @@
       {
         "system": false,
         "id": "l3nskghf",
-        "name": "recipient_ids",
+        "name": "recipientIds",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -792,11 +792,11 @@
       }
     ],
     "indexes": [],
-    "listRule": "@request.auth.participants_via_user_id.conversation_id ?= participant_id.conversation_id",
-    "viewRule": "@request.auth.participants_via_user_id.conversation_id ?= participant_id.conversation_id",
+    "listRule": "@request.auth.participants_via_userId.conversationId ?= participantId.conversationId",
+    "viewRule": "@request.auth.participants_via_userId.conversationId ?= participantId.conversationId",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "participant_id.user_id = @request.auth.id || @request.auth.conversation_admins_via_user_id.conversation_id ?= participant_id.conversation_id",
-    "deleteRule": "participant_id.user_id = @request.auth.id || @request.auth.conversation_admins_via_user_id.conversation_id ?= participant_id.conversation_id",
+    "updateRule": "participantId.userId = @request.auth.id || @request.auth.conversation_admins_via_userId.conversationId ?= participantId.conversationId",
+    "deleteRule": "participantId.userId = @request.auth.id || @request.auth.conversation_admins_via_userId.conversationId ?= participantId.conversationId",
     "options": {}
   },
   {
@@ -822,7 +822,7 @@
       {
         "system": false,
         "id": "82d6llor",
-        "name": "order_id",
+        "name": "orderId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -838,7 +838,7 @@
       {
         "system": false,
         "id": "ze11wemq",
-        "name": "status_code_id",
+        "name": "statusCodeId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -869,7 +869,7 @@
       {
         "system": false,
         "id": "iispyjhp",
-        "name": "ordered_qty",
+        "name": "orderedQty",
         "type": "number",
         "required": false,
         "presentable": false,
@@ -883,7 +883,7 @@
       {
         "system": false,
         "id": "moj8swah",
-        "name": "received_qty",
+        "name": "receivedQty",
         "type": "number",
         "required": false,
         "presentable": false,
@@ -897,7 +897,7 @@
       {
         "system": false,
         "id": "bmktrag0",
-        "name": "unit_price",
+        "name": "unitPrice",
         "type": "number",
         "required": true,
         "presentable": false,
@@ -925,7 +925,7 @@
       {
         "system": false,
         "id": "7yeasgnz",
-        "name": "order_id",
+        "name": "orderId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -941,7 +941,7 @@
       {
         "system": false,
         "id": "netqqwib",
-        "name": "product_category_id",
+        "name": "productCategoryId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -956,13 +956,13 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_LGPiKG4` ON `order_items` (\n  `order_id`,\n  `product_category_id`\n)"
+      "CREATE UNIQUE INDEX `idx_LGPiKG4` ON `order_items` (\n  `orderId`,\n  `productCategoryId`\n)"
     ],
-    "listRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "deleteRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "updateRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "deleteRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
   {
@@ -974,7 +974,7 @@
       {
         "system": false,
         "id": "zgwsoimk",
-        "name": "status_code",
+        "name": "statusCode",
         "type": "text",
         "required": true,
         "presentable": false,
@@ -1001,7 +1001,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_YhmYEHX` ON `order_status_codes` (`status_code`)"
+      "CREATE UNIQUE INDEX `idx_YhmYEHX` ON `order_status_codes` (`statusCode`)"
     ],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
@@ -1066,7 +1066,7 @@
       {
         "system": false,
         "id": "ff8dl790",
-        "name": "other_info",
+        "name": "otherInfo",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -1080,7 +1080,7 @@
       {
         "system": false,
         "id": "uh4rmuha",
-        "name": "root_order_id",
+        "name": "rootOrderId",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -1096,7 +1096,7 @@
       {
         "system": false,
         "id": "napxjnzz",
-        "name": "customer_id",
+        "name": "customerId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1112,7 +1112,7 @@
       {
         "system": false,
         "id": "vgowsnxd",
-        "name": "status_code_id",
+        "name": "statusCodeId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1128,7 +1128,7 @@
       {
         "system": false,
         "id": "tp4tozu9",
-        "name": "address_id",
+        "name": "addressId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1143,11 +1143,11 @@
       }
     ],
     "indexes": [],
-    "listRule": "customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "deleteRule": "customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "updateRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "deleteRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
   {
@@ -1159,7 +1159,7 @@
       {
         "system": false,
         "id": "ly2ky3cr",
-        "name": "conversation_id",
+        "name": "conversationId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1175,7 +1175,7 @@
       {
         "system": false,
         "id": "bwwxre69",
-        "name": "user_id",
+        "name": "userId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1190,13 +1190,13 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_bJZA4H8` ON `participants` (\n  `conversation_id`,\n  `user_id`\n)"
+      "CREATE UNIQUE INDEX `idx_bJZA4H8` ON `participants` (\n  `conversationId`,\n  `userId`\n)"
     ],
-    "listRule": "conversation_id.participants_via_conversation_id.user_id ?= @request.auth.id || conversation_id.conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
-    "viewRule": "conversation_id.participants_via_conversation_id.user_id ?= @request.auth.id || conversation_id.conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
+    "listRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "viewRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
     "createRule": "@request.auth.id != \"\"",
     "updateRule": null,
-    "deleteRule": "conversation_id.participants_via_conversation_id.user_id ?= @request.auth.id || conversation_id.conversation_admins_via_conversation_id.user_id ?= @request.auth.id",
+    "deleteRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
     "options": {}
   },
   {
@@ -1222,7 +1222,7 @@
       {
         "system": false,
         "id": "6apt3tel",
-        "name": "product_id",
+        "name": "productId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1238,7 +1238,7 @@
       {
         "system": false,
         "id": "iehyx3oh",
-        "name": "colour_id",
+        "name": "colourId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1253,7 +1253,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_Xa76LkK` ON `product_categories` (\n  `product_id`,\n  `colour_id`\n)"
+      "CREATE UNIQUE INDEX `idx_Xa76LkK` ON `product_categories` (\n  `productId`,\n  `colourId`\n)"
     ],
     "listRule": "",
     "viewRule": "",
@@ -1271,7 +1271,7 @@
       {
         "system": false,
         "id": "v9hif8z9",
-        "name": "image_url",
+        "name": "imageUrl",
         "type": "text",
         "required": true,
         "presentable": false,
@@ -1285,7 +1285,7 @@
       {
         "system": false,
         "id": "0xxipmnd",
-        "name": "alt_text",
+        "name": "altText",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -1299,7 +1299,7 @@
       {
         "system": false,
         "id": "lz2i7fzs",
-        "name": "product_id",
+        "name": "productId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1344,7 +1344,7 @@
       {
         "system": false,
         "id": "tisyu2hi",
-        "name": "category_id",
+        "name": "categoryId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1360,7 +1360,7 @@
       {
         "system": false,
         "id": "l4jcckup",
-        "name": "working_unit_id",
+        "name": "workingUnitId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1375,7 +1375,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_B2bqLvs` ON `product_quantities` (\n  `category_id`,\n  `working_unit_id`\n)"
+      "CREATE UNIQUE INDEX `idx_B2bqLvs` ON `product_quantities` (\n  `categoryId`,\n  `workingUnitId`\n)"
     ],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
@@ -1421,7 +1421,7 @@
       {
         "system": false,
         "id": "prnqsamb",
-        "name": "expected_price",
+        "name": "expectedPrice",
         "type": "number",
         "required": false,
         "presentable": false,
@@ -1449,7 +1449,7 @@
       {
         "system": false,
         "id": "pnzgatb7",
-        "name": "tag_ids",
+        "name": "tagIds",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -1515,7 +1515,7 @@
       {
         "system": false,
         "id": "17h2b2vj",
-        "name": "other_info",
+        "name": "otherInfo",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -1529,7 +1529,7 @@
       {
         "system": false,
         "id": "mvjqphgb",
-        "name": "shipment_id",
+        "name": "shipmentId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1545,7 +1545,7 @@
       {
         "system": false,
         "id": "15cwxflp",
-        "name": "staff_id",
+        "name": "staffId",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -1590,7 +1590,7 @@
       {
         "system": false,
         "id": "5i06dmud",
-        "name": "roll_qty",
+        "name": "rollQty",
         "type": "number",
         "required": true,
         "presentable": false,
@@ -1618,7 +1618,7 @@
       {
         "system": false,
         "id": "l9vhuhge",
-        "name": "shipment_id",
+        "name": "shipmentId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1634,7 +1634,7 @@
       {
         "system": false,
         "id": "im7wnzr1",
-        "name": "order_item_id",
+        "name": "orderItemId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1649,10 +1649,10 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_1xHG7KZ` ON `shipment_items` (\n  `shipment_id`,\n  `order_item_id`\n)"
+      "CREATE UNIQUE INDEX `idx_1xHG7KZ` ON `shipment_items` (\n  `shipmentId`,\n  `orderItemId`\n)"
     ],
-    "listRule": "shipment_id.order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "shipment_id.order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "shipmentId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "shipmentId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1667,7 +1667,7 @@
       {
         "system": false,
         "id": "jqcy8b80",
-        "name": "status_code",
+        "name": "statusCode",
         "type": "text",
         "required": true,
         "presentable": false,
@@ -1694,7 +1694,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_tbnOBcE` ON `shipment_status_codes` (`status_code`)"
+      "CREATE UNIQUE INDEX `idx_tbnOBcE` ON `shipment_status_codes` (`statusCode`)"
     ],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
@@ -1732,7 +1732,7 @@
       {
         "system": false,
         "id": "rigsg6vw",
-        "name": "shipment_date",
+        "name": "shipmentDate",
         "type": "date",
         "required": false,
         "presentable": false,
@@ -1745,7 +1745,7 @@
       {
         "system": false,
         "id": "v2vpuxyc",
-        "name": "delivery_date",
+        "name": "deliveryDate",
         "type": "date",
         "required": false,
         "presentable": false,
@@ -1772,7 +1772,7 @@
       {
         "system": false,
         "id": "fpekt4ye",
-        "name": "order_id",
+        "name": "orderId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1788,7 +1788,7 @@
       {
         "system": false,
         "id": "lyollt8g",
-        "name": "invoice_id",
+        "name": "invoiceId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1804,7 +1804,7 @@
       {
         "system": false,
         "id": "cjylj0t6",
-        "name": "status_code_id",
+        "name": "statusCodeId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1819,10 +1819,10 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_lD3etVj` ON `shipments` (\n  `order_id`,\n  `invoice_id`\n)"
+      "CREATE UNIQUE INDEX `idx_lD3etVj` ON `shipments` (\n  `orderId`,\n  `invoiceId`\n)"
     ],
-    "listRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "order_id.customer_id = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1837,7 +1837,7 @@
       {
         "system": false,
         "id": "lpq224tk",
-        "name": "status_code",
+        "name": "statusCode",
         "type": "select",
         "required": true,
         "presentable": false,
@@ -1874,7 +1874,7 @@
       {
         "system": false,
         "id": "lbgtar1m",
-        "name": "user_id",
+        "name": "userId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -1890,7 +1890,7 @@
       {
         "system": false,
         "id": "kbmzxgda",
-        "name": "working_unit_id",
+        "name": "workingUnitId",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -1905,7 +1905,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_kikHSGl` ON `staff_information` (`user_id`)"
+      "CREATE UNIQUE INDEX `idx_kikHSGl` ON `staff_information` (`userId`)"
     ],
     "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1973,7 +1973,7 @@
       {
         "system": false,
         "id": "fqkslwn0",
-        "name": "friendly_name",
+        "name": "friendlyName",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -1987,7 +1987,7 @@
       {
         "system": false,
         "id": "3yjyqbnv",
-        "name": "is_default",
+        "name": "isDefault",
         "type": "bool",
         "required": false,
         "presentable": false,
@@ -1997,7 +1997,7 @@
       {
         "system": false,
         "id": "vlr8r3cp",
-        "name": "user_id",
+        "name": "userId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -2013,7 +2013,7 @@
       {
         "system": false,
         "id": "zkamkzp9",
-        "name": "address_id",
+        "name": "addressId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -2028,13 +2028,13 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_iLfx8Tu` ON `user_addresses` (\n  `user_id`,\n  `address_id`\n)"
+      "CREATE UNIQUE INDEX `idx_iLfx8Tu` ON `user_addresses` (\n  `userId`,\n  `addressId`\n)"
     ],
-    "listRule": "user_id = @request.auth.id",
-    "viewRule": "user_id = @request.auth.id",
+    "listRule": "userId = @request.auth.id",
+    "viewRule": "userId = @request.auth.id",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "user_id = @request.auth.id",
-    "deleteRule": "user_id = @request.auth.id",
+    "updateRule": "userId = @request.auth.id",
+    "deleteRule": "userId = @request.auth.id",
     "options": {}
   },
   {
@@ -2081,7 +2081,7 @@
       {
         "system": false,
         "id": "kpj0ft8u",
-        "name": "other_info",
+        "name": "otherInfo",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -2095,7 +2095,7 @@
       {
         "system": false,
         "id": "uk9hplvt",
-        "name": "staff_id",
+        "name": "staffId",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -2111,7 +2111,7 @@
       {
         "system": false,
         "id": "ryoqoems",
-        "name": "src_working_unit_id",
+        "name": "srcWorkingUnitId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -2127,7 +2127,7 @@
       {
         "system": false,
         "id": "zp24tcao",
-        "name": "dst_working_unit_id",
+        "name": "dstWorkingUnitId",
         "type": "relation",
         "required": false,
         "presentable": false,
@@ -2143,7 +2143,7 @@
       {
         "system": false,
         "id": "rji4r1bl",
-        "name": "internal_order_id",
+        "name": "internalOrderId",
         "type": "relation",
         "required": true,
         "presentable": false,
@@ -2206,7 +2206,7 @@
       {
         "system": false,
         "id": "21krhjva",
-        "name": "image_url",
+        "name": "imageUrl",
         "type": "text",
         "required": false,
         "presentable": false,
@@ -2220,7 +2220,7 @@
       {
         "system": false,
         "id": "jn427lzh",
-        "name": "address_id",
+        "name": "addressId",
         "type": "relation",
         "required": false,
         "presentable": false,
