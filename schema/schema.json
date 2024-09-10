@@ -21,16 +21,15 @@
       },
       {
         "system": false,
-        "id": "hy8epelv",
+        "id": "qv1rgzqs",
         "name": "avatarUrl",
-        "type": "text",
+        "type": "url",
         "required": false,
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
+          "exceptDomains": [],
+          "onlyDomains": []
         }
       },
       {
@@ -716,7 +715,7 @@
     "indexes": [],
     "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "createRule": "@request.auth.id != \"\"",
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
@@ -1270,16 +1269,15 @@
     "schema": [
       {
         "system": false,
-        "id": "v9hif8z9",
+        "id": "cugfpyja",
         "name": "imageUrl",
-        "type": "text",
+        "type": "url",
         "required": true,
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
+          "exceptDomains": null,
+          "onlyDomains": null
         }
       },
       {
@@ -2205,16 +2203,15 @@
       },
       {
         "system": false,
-        "id": "21krhjva",
+        "id": "ry1rm3ou",
         "name": "imageUrl",
-        "type": "text",
+        "type": "url",
         "required": false,
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
+          "exceptDomains": [],
+          "onlyDomains": []
         }
       },
       {
