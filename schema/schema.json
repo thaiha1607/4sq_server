@@ -548,7 +548,7 @@
         "name": "statusCode",
         "type": "text",
         "required": true,
-        "presentable": false,
+        "presentable": true,
         "unique": false,
         "options": {
           "min": null,
@@ -870,7 +870,7 @@
         "id": "iispyjhp",
         "name": "orderedQty",
         "type": "number",
-        "required": false,
+        "required": true,
         "presentable": false,
         "unique": false,
         "options": {
@@ -976,7 +976,7 @@
         "name": "statusCode",
         "type": "text",
         "required": true,
-        "presentable": false,
+        "presentable": true,
         "unique": false,
         "options": {
           "min": null,
@@ -1668,7 +1668,7 @@
         "name": "statusCode",
         "type": "text",
         "required": true,
-        "presentable": false,
+        "presentable": true,
         "unique": false,
         "options": {
           "min": null,
