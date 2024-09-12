@@ -2165,7 +2165,7 @@
   },
   {
     "id": "cr8iizw10m7kh1d",
-    "name": "working_unit",
+    "name": "working_units",
     "type": "base",
     "system": false,
     "schema": [
@@ -2238,5 +2238,50 @@
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "deleteRule": "@request.auth.role = \"manager\"",
     "options": {}
+  },
+  {
+    "id": "1hln2do3ca9mwaz",
+    "name": "product_quantity_summary",
+    "type": "view",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "z4xtnp4y",
+        "name": "categoryId",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "upkshg4h89ndt95",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "t89xcwdj",
+        "name": "total_qty",
+        "type": "json",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "maxSize": 1
+        }
+      }
+    ],
+    "indexes": [],
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "options": {
+      "query": "SELECT (ROW_NUMBER() OVER()) as id, categoryId, SUM(qty) AS total_qty\nFROM product_quantities\nGROUP BY categoryId;"
+    }
   }
 ]
