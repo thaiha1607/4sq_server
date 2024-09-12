@@ -2247,7 +2247,7 @@
     "schema": [
       {
         "system": false,
-        "id": "z4xtnp4y",
+        "id": "r6lxogeb",
         "name": "categoryId",
         "type": "relation",
         "required": true,
@@ -2263,8 +2263,8 @@
       },
       {
         "system": false,
-        "id": "t89xcwdj",
-        "name": "total_qty",
+        "id": "mrh8dppi",
+        "name": "totalQty",
         "type": "json",
         "required": false,
         "presentable": false,
@@ -2281,7 +2281,7 @@
     "updateRule": null,
     "deleteRule": null,
     "options": {
-      "query": "SELECT (ROW_NUMBER() OVER()) as id, categoryId, SUM(qty) AS total_qty\nFROM product_quantities\nGROUP BY categoryId;"
+      "query": "SELECT (ROW_NUMBER() OVER()) as id, categoryId, SUM(qty) AS totalQty\nFROM product_quantities\nGROUP BY categoryId;"
     }
   }
 ]
