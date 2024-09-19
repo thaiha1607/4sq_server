@@ -615,6 +615,7 @@
             "pro_forma",
             "regular",
             "past_due",
+            "retainer",
             "interim",
             "timesheet",
             "final",
