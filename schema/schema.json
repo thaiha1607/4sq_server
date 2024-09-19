@@ -800,67 +800,6 @@
     "options": {}
   },
   {
-    "id": "bns1w3blewkvp6p",
-    "name": "order_history",
-    "type": "base",
-    "system": false,
-    "schema": [
-      {
-        "system": false,
-        "id": "59qqgi0g",
-        "name": "note",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
-        }
-      },
-      {
-        "system": false,
-        "id": "82d6llor",
-        "name": "orderId",
-        "type": "relation",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "2stc36eglv3voqe",
-          "cascadeDelete": true,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "ze11wemq",
-        "name": "statusCodeId",
-        "type": "relation",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "93h7enu78ajtk7w",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      }
-    ],
-    "indexes": [],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
-    "options": {}
-  },
-  {
     "id": "nqclqjsjbs7e523",
     "name": "order_items",
     "type": "base",
@@ -1945,6 +1884,79 @@
     "options": {}
   },
   {
+    "id": "kgkfehwran8zgs8",
+    "name": "transaction_history",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "xy2z6b67",
+        "name": "entityType",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 256,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "ubiiz0ft",
+        "name": "entityId",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 256,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "cprxxoqe",
+        "name": "statusCodeId",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 256,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "hycktg06",
+        "name": "note",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      }
+    ],
+    "indexes": [
+      "CREATE INDEX `idx_kcKC4Vm` ON `transaction_history` (\n  `entityType`,\n  `entityId`\n)"
+    ],
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "options": {}
+  },
+  {
     "id": "4mc1mg16zw31tum",
     "name": "user_addresses",
     "type": "base",
@@ -2248,7 +2260,7 @@
     "schema": [
       {
         "system": false,
-        "id": "r6lxogeb",
+        "id": "maw34cs3",
         "name": "categoryId",
         "type": "relation",
         "required": true,
@@ -2264,7 +2276,7 @@
       },
       {
         "system": false,
-        "id": "mrh8dppi",
+        "id": "sbzefpfs",
         "name": "totalQty",
         "type": "json",
         "required": false,
@@ -2282,7 +2294,7 @@
     "updateRule": null,
     "deleteRule": null,
     "options": {
-      "query": "SELECT (ROW_NUMBER() OVER()) as id, categoryId, SUM(qty) AS totalQty\nFROM product_quantities\nGROUP BY categoryId;"
+      "query": "SELECT (ROW_NUMBER() OVER()) AS id, categoryId, SUM(qty) AS totalQty\nFROM product_quantities\nGROUP BY categoryId;"
     }
   }
 ]

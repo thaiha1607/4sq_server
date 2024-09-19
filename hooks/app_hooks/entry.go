@@ -1,4 +1,4 @@
-package apphooks
+package app_hooks
 
 import (
 	"os"
