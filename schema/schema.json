@@ -67,8 +67,8 @@
     "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
-    "createRule": "@request.auth.role = \"manager\" || (@request.data.role:isset = true && @request.data.role = \"customer\")",
-    "updateRule": "(id = @request.auth.id && @request.data.role:isset = false) || @request.auth.role = \"manager\"",
+    "createRule": "@request.auth.role = \"manager\" || @request.data.role = \"customer\"",
+    "updateRule": "(id = @request.auth.id && @request.data.role = role) || @request.auth.role = \"manager\"",
     "deleteRule": "id = @request.auth.id || @request.auth.role = \"manager\"",
     "options": {
       "allowEmailAuth": true,
@@ -451,8 +451,8 @@
     ],
     "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
-    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.internalOrderId.rootOrderId = @request.data.orderItemId.orderId",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.internalOrderId = internalOrderId && @request.data.orderItemId = orderItemId",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
@@ -532,7 +532,7 @@
     "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.rootOrderId = rootOrderId && @request.data.type = type",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
@@ -717,7 +717,7 @@
     "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = orderId",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
@@ -899,8 +899,8 @@
     ],
     "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "createRule": "@request.auth.id != \"\" && @request.data.receivedQty:isset = false",
+    "updateRule": "((orderId.customerId = @request.auth.id && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
     "deleteRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
@@ -1085,7 +1085,7 @@
     "listRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "updateRule": "(customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.customerId = customerId && @request.data.type = type",
     "deleteRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
@@ -1591,8 +1591,8 @@
     ],
     "listRule": "shipmentId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "shipmentId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.shipmentId.orderId = @request.data.orderItemId.orderId",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.shipmentId = shipmentId && @request.data.orderItemId = orderItemId",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
@@ -1761,8 +1761,8 @@
     ],
     "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = @request.data.invoiceId.orderId",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = orderId && @request.data.invoiceId = invoiceId",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
