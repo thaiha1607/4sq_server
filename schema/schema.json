@@ -899,7 +899,7 @@
     ],
     "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\" && @request.data.receivedQty:isset = false",
+    "createRule": "@request.auth.id != \"\" && (@request.data.receivedQty:isset = false || @request.data.receivedQty = 0)",
     "updateRule": "((orderId.customerId = @request.auth.id && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
     "deleteRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
