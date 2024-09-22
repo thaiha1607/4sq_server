@@ -1764,9 +1764,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_lD3etVj` ON `shipments` (\n  `orderId`,\n  `invoiceId`\n)"
-    ],
+    "indexes": [],
     "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = @request.data.invoiceId.orderId",
