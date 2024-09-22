@@ -1,0 +1,28 @@
+package custom_models
+
+import (
+	"github.com/pocketbase/dbx"
+	"github.com/pocketbase/pocketbase/daos"
+	"github.com/pocketbase/pocketbase/models"
+)
+
+var _ models.Model = (*Invoice)(nil)
+
+type Invoice struct {
+	models.BaseModel
+	TotalAmount   int64  `db:"totalAmount" json:"totalAmount"`
+	Type          string `db:"type" json:"type"`
+	PaymentMethod string `db:"paymentMethod" json:"paymentMethod"`
+	Note          string `db:"note" json:"note,omitempty"`
+	OrderId       string `db:"orderId" json:"orderId"`
+	StatusCodeId  string `db:"statusCodeId" json:"statusCodeId"`
+	RootInvoiceId string `db:"rootInvoiceId" json:"rootInvoiceId,omitempty"`
+}
+
+func (m *Invoice) TableName() string {
+	return "invoices"
+}
+
+func InvoiceQuery(dao *daos.Dao) *dbx.SelectQuery {
+	return dao.ModelQuery(&Invoice{})
+}

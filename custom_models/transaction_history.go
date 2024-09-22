@@ -1,6 +1,8 @@
 package custom_models
 
 import (
+	"github.com/pocketbase/dbx"
+	"github.com/pocketbase/pocketbase/daos"
 	"github.com/pocketbase/pocketbase/models"
 )
 
@@ -16,4 +18,8 @@ type TransactionHistory struct {
 
 func (m *TransactionHistory) TableName() string {
 	return "transaction_history"
+}
+
+func TransactionHistoryQuery(dao *daos.Dao) *dbx.SelectQuery {
+	return dao.ModelQuery(&TransactionHistory{})
 }
