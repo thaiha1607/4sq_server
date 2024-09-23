@@ -555,6 +555,83 @@
     "options": {}
   },
   {
+    "id": "jzxryofwy4tmpha",
+    "name": "invoice_line_items",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "t0bsxsim",
+        "name": "invoiceId",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "mbgvq8b9yf5i2d1",
+          "cascadeDelete": true,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "4xzbexgo",
+        "name": "orderItemId",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "nqclqjsjbs7e523",
+          "cascadeDelete": true,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "srijo8n1",
+        "name": "unitPrice",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
+        "id": "wmuffpzt",
+        "name": "note",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_gS5MiNG` ON `invoice_line_items` (\n  `invoiceId`,\n  `orderItemId`\n)"
+    ],
+    "listRule": "invoiceId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "invoiceId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "createRule": "@request.auth.id != \"\" && @request.data.invoiceId.orderId = @request.data.orderItemId.orderId",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.invoiceId = invoiceId && @request.data.orderItemId = orderItemId",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "options": {}
+  },
+  {
     "id": "ldiepkv7gnn4nrr",
     "name": "invoice_status_codes",
     "type": "base",
@@ -729,6 +806,20 @@
           "maxSelect": 1,
           "displayFields": null
         }
+      },
+      {
+        "system": false,
+        "id": "ek3zcke2",
+        "name": "otherInfo",
+        "type": "text",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": ""
+        }
       }
     ],
     "indexes": [
@@ -855,7 +946,7 @@
       },
       {
         "system": false,
-        "id": "bmktrag0",
+        "id": "rdcou6v1",
         "name": "unitPrice",
         "type": "number",
         "required": true,
@@ -1561,20 +1652,6 @@
           "min": 0,
           "max": null,
           "noDecimal": true
-        }
-      },
-      {
-        "system": false,
-        "id": "quyb6yrk",
-        "name": "total",
-        "type": "number",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": 0,
-          "max": null,
-          "noDecimal": false
         }
       },
       {

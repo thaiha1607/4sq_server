@@ -10,11 +10,10 @@ var _ models.Model = (*ShipmentItem)(nil)
 
 type ShipmentItem struct {
 	models.BaseModel
-	Qty         int64   `db:"qty" json:"qty"`
-	RollQty     int64   `db:"rollQty" json:"rollQty"`
-	Total       float64 `db:"total" json:"total"`
-	ShipmentId  string  `db:"shipmentId" json:"shipmentId"`
-	OrderItemId string  `db:"orderItemId" json:"orderItemId"`
+	Qty         int64  `db:"qty" json:"qty"`
+	RollQty     int64  `db:"rollQty" json:"rollQty"`
+	ShipmentId  string `db:"shipmentId" json:"shipmentId"`
+	OrderItemId string `db:"orderItemId" json:"orderItemId"`
 }
 
 func (m *ShipmentItem) TableName() string {

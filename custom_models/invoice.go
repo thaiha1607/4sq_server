@@ -17,6 +17,7 @@ type Invoice struct {
 	OrderId       string `db:"orderId" json:"orderId"`
 	StatusCodeId  string `db:"statusCodeId" json:"statusCodeId"`
 	RootInvoiceId string `db:"rootInvoiceId" json:"rootInvoiceId,omitempty"`
+	OtherInfo     string `db:"otherInfo" json:"otherInfo,omitempty"`
 }
 
 func (m *Invoice) TableName() string {
