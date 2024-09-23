@@ -528,6 +528,22 @@
           "maxSelect": 1,
           "displayFields": null
         }
+      },
+      {
+        "system": false,
+        "id": "wi7c7mns",
+        "name": "shipmentId",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "0fvjhfcs9ig8nd8",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
       }
     ],
     "indexes": [],
@@ -1768,7 +1784,7 @@
     "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = @request.data.invoiceId.orderId",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = orderId && @request.data.invoiceId = invoiceId",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = orderId && @request.data.invoiceId.orderId = orderId",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
@@ -2267,7 +2283,7 @@
     "schema": [
       {
         "system": false,
-        "id": "maw34cs3",
+        "id": "aexhk0fk",
         "name": "categoryId",
         "type": "relation",
         "required": true,
@@ -2283,7 +2299,7 @@
       },
       {
         "system": false,
-        "id": "sbzefpfs",
+        "id": "nxedrskh",
         "name": "totalQty",
         "type": "json",
         "required": false,
