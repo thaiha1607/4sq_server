@@ -534,7 +534,7 @@
         "id": "wi7c7mns",
         "name": "shipmentId",
         "type": "relation",
-        "required": true,
+        "required": false,
         "presentable": false,
         "unique": false,
         "options": {
@@ -1834,7 +1834,7 @@
         "unique": false,
         "options": {
           "collectionId": "mbgvq8b9yf5i2d1",
-          "cascadeDelete": true,
+          "cascadeDelete": false,
           "minSelect": null,
           "maxSelect": 1,
           "displayFields": null

@@ -14,7 +14,7 @@ type InternalOrder struct {
 	Note         string `db:"note" json:"note,omitempty"`
 	StatusCodeId string `db:"statusCodeId" json:"statusCodeId"`
 	RootOrderId  string `db:"rootOrderId" json:"rootOrderId"`
-	ShipmentId   string `db:"shipmentId" json:"shipmentId"`
+	ShipmentId   string `db:"shipmentId" json:"shipmentId,omitempty"`
 }
 
 func (m *InternalOrder) TableName() string {
