@@ -11,7 +11,7 @@ var _ models.Model = (*ShipmentItem)(nil)
 type ShipmentItem struct {
 	models.BaseModel
 	Qty         int64  `db:"qty" json:"qty"`
-	RollQty     int64  `db:"rollQty" json:"rollQty"`
+	RollQty     int64  `db:"rollQty" json:"rollQty,omitempty"`
 	ShipmentId  string `db:"shipmentId" json:"shipmentId"`
 	OrderItemId string `db:"orderItemId" json:"orderItemId"`
 }

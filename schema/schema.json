@@ -403,6 +403,20 @@
       },
       {
         "system": false,
+        "id": "6yjchw0j",
+        "name": "rollQty",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null,
+          "noDecimal": true
+        }
+      },
+      {
+        "system": false,
         "id": "xhyfdg6v",
         "name": "note",
         "type": "text",
@@ -1645,7 +1659,7 @@
         "id": "5i06dmud",
         "name": "rollQty",
         "type": "number",
-        "required": true,
+        "required": false,
         "presentable": false,
         "unique": false,
         "options": {

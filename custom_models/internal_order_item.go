@@ -11,6 +11,7 @@ var _ models.Model = (*InternalOrderItem)(nil)
 type InternalOrderItem struct {
 	models.BaseModel
 	Qty             int64  `db:"qty" json:"qty,omitempty"`
+	RollQty         int64  `db:"rollQty" json:"rollQty,omitempty"`
 	Note            string `db:"note" json:"note,omitempty"`
 	InternalOrderId string `db:"internalOrderId" json:"internalOrderId"`
 	OrderItemId     string `db:"orderItemId" json:"orderItemId"`

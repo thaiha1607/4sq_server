@@ -5,15 +5,15 @@ type ShipmentType string
 
 const (
 	// Outbound represents an outbound shipment.
-	Outbound ShipmentType = "Outbound"
+	Outbound ShipmentType = "outbound"
 	// Inbound represents an inbound shipment.
-	Inbound ShipmentType = "Inbound"
+	Inbound ShipmentType = "inbound"
 	// Transfer represents a transfer shipment.
-	Transfer ShipmentType = "Transfer"
+	Transfer ShipmentType = "transfer"
 	// Return represents a return shipment.
-	Return ShipmentType = "Return"
+	Return ShipmentType = "return"
 	// Exchange represents an exchange shipment.
-	Exchange ShipmentType = "Exchange"
+	Exchange ShipmentType = "exchange"
 	// Other represents any other type of shipment.
-	Other ShipmentType = "Other"
+	Other ShipmentType = "other"
 )

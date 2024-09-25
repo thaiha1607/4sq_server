@@ -22,7 +22,7 @@ const (
 	Paid
 	// Void is the status of an invoice that has been voided by the user.
 	Void
-	// BadDebt is the status of an invoice that has been deemed uncollectible by the user.
+	// Debt is the status of an invoice that has been deemed uncollectible by the user.
 	Debt
 	// Reserved is the status of an invoice that has been reserved for future use.
 	Reserved
