@@ -10,12 +10,12 @@
         "id": "users_name",
         "name": "name",
         "type": "text",
-        "required": false,
+        "required": true,
         "presentable": false,
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -37,7 +37,7 @@
         "id": "l5r0tgky",
         "name": "phone",
         "type": "text",
-        "required": false,
+        "required": true,
         "presentable": false,
         "unique": false,
         "options": {
@@ -100,7 +100,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -114,7 +114,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -128,7 +128,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -142,7 +142,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -156,7 +156,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -170,7 +170,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       }
@@ -199,7 +199,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -256,7 +256,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 512,
           "pattern": ""
         }
       },
@@ -367,7 +367,7 @@
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
+          "min": 1,
           "max": 256,
           "pattern": ""
         }
@@ -379,6 +379,78 @@
     "createRule": "@request.auth.id != \"\"",
     "updateRule": "conversation_admins_via_conversationId.userId ?= @request.auth.id",
     "deleteRule": "conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "options": {}
+  },
+  {
+    "id": "68wsl8pf0ab44u1",
+    "name": "guest_info",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "yznhx5l7",
+        "name": "name",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": 256,
+          "pattern": ""
+        }
+      },
+      {
+        "system": false,
+        "id": "kujsv6yr",
+        "name": "email",
+        "type": "email",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "exceptDomains": [],
+          "onlyDomains": []
+        }
+      },
+      {
+        "system": false,
+        "id": "f0ozkueb",
+        "name": "phone",
+        "type": "text",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "pattern": "^\\+[1-9]\\d{1,14}$"
+        }
+      },
+      {
+        "system": false,
+        "id": "mrprgcue",
+        "name": "addressId",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "7uhp3ed4afuq9uc",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      }
+    ],
+    "indexes": [],
+    "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "options": {}
   },
   {
@@ -638,11 +710,11 @@
     "indexes": [
       "CREATE UNIQUE INDEX `idx_gS5MiNG` ON `invoice_line_items` (\n  `invoiceId`,\n  `orderItemId`\n)"
     ],
-    "listRule": "invoiceId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "invoiceId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\" && @request.data.invoiceId.orderId = @request.data.orderItemId.orderId",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.invoiceId = invoiceId && @request.data.orderItemId = orderItemId",
-    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "listRule": "invoiceId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "invoiceId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "createRule": "@request.auth.role = \"manager\" && @request.data.invoiceId.orderId = @request.data.orderItemId.orderId",
+    "updateRule": "@request.auth.role = \"manager\" && @request.data.invoiceId = invoiceId && @request.data.orderItemId = orderItemId",
+    "deleteRule": "@request.auth.role = \"manager\"",
     "options": {}
   },
   {
@@ -839,11 +911,11 @@
     "indexes": [
       "CREATE INDEX `idx_VlOtvkK` ON `invoices` (`orderId`)"
     ],
-    "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\"",
-    "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = orderId",
-    "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "createRule": "@request.auth.role = \"manager\"",
+    "updateRule": "@request.auth.role = \"manager\" && @request.data.orderId = orderId",
+    "deleteRule": "@request.auth.role = \"manager\"",
     "options": {}
   },
   {
@@ -1022,11 +1094,11 @@
     "indexes": [
       "CREATE UNIQUE INDEX `idx_LGPiKG4` ON `order_items` (\n  `orderId`,\n  `productCategoryId`\n)"
     ],
-    "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && (@request.data.receivedQty:isset = false || @request.data.receivedQty = 0)",
-    "updateRule": "((orderId.customerId = @request.auth.id && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
-    "deleteRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "updateRule": "((orderId.creatorId = @request.auth.id && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
+    "deleteRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
   {
@@ -1115,6 +1187,20 @@
       },
       {
         "system": false,
+        "id": "lvsuqylu",
+        "name": "rating",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 1,
+          "max": 5,
+          "noDecimal": true
+        }
+      },
+      {
+        "system": false,
         "id": "brnqocq4",
         "name": "note",
         "type": "text",
@@ -1159,14 +1245,30 @@
       },
       {
         "system": false,
-        "id": "napxjnzz",
-        "name": "customerId",
+        "id": "eumiqg6p",
+        "name": "creatorId",
         "type": "relation",
         "required": true,
         "presentable": false,
         "unique": false,
         "options": {
           "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "hy0l5eky",
+        "name": "guestId",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "68wsl8pf0ab44u1",
           "cascadeDelete": false,
           "minSelect": null,
           "maxSelect": 1,
@@ -1207,13 +1309,14 @@
       }
     ],
     "indexes": [
-      "CREATE INDEX `idx_zuaadLT` ON `orders` (`customerId`)"
+      "CREATE INDEX `idx_3Q3JUsm` ON `orders` (`creatorId`)",
+      "CREATE INDEX `idx_f4G2ru9` ON `orders` (`guestId`)"
     ],
-    "listRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "(customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.customerId = customerId && @request.data.type = type",
-    "deleteRule": "customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "updateRule": "(creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.creatorId = creatorId && @request.data.type = type",
+    "deleteRule": "creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
   {
@@ -1281,7 +1384,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 256,
           "pattern": ""
         }
       },
@@ -1704,8 +1807,8 @@
     "indexes": [
       "CREATE UNIQUE INDEX `idx_1xHG7KZ` ON `shipment_items` (\n  `shipmentId`,\n  `orderItemId`\n)"
     ],
-    "listRule": "shipmentId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "shipmentId.orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "shipmentId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "shipmentId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.shipmentId.orderId = @request.data.orderItemId.orderId",
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.shipmentId = shipmentId && @request.data.orderItemId = orderItemId",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1872,8 +1975,8 @@
       }
     ],
     "indexes": [],
-    "listRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "viewRule": "orderId.customerId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
+    "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = @request.data.invoiceId.orderId",
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.orderId = orderId && @request.data.invoiceId.orderId = orderId",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1881,7 +1984,7 @@
   },
   {
     "id": "v6f615blwqyoe4d",
-    "name": "staff_information",
+    "name": "staff_info",
     "type": "base",
     "system": false,
     "schema": [
@@ -1956,8 +2059,8 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_kikHSGl` ON `staff_information` (`userId`)",
-      "CREATE INDEX `idx_r696cdI` ON `staff_information` (`role`)"
+      "CREATE UNIQUE INDEX `idx_kikHSGl` ON `staff_info` (`userId`)",
+      "CREATE INDEX `idx_r696cdI` ON `staff_info` (`role`)"
     ],
     "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1981,8 +2084,8 @@
         "presentable": false,
         "unique": false,
         "options": {
-          "min": null,
-          "max": null,
+          "min": 1,
+          "max": 64,
           "pattern": ""
         }
       }
@@ -2105,7 +2208,7 @@
         "unique": false,
         "options": {
           "min": null,
-          "max": null,
+          "max": 64,
           "pattern": ""
         }
       },

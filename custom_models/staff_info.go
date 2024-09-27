@@ -17,7 +17,7 @@ type StaffInfo struct {
 }
 
 func (m *StaffInfo) TableName() string {
-	return "staff_information"
+	return "staff_info"
 }
 
 func StaffInfoQuery(dao *daos.Dao) *dbx.SelectQuery {
