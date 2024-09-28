@@ -816,6 +816,20 @@
       },
       {
         "system": false,
+        "id": "njtfqifi",
+        "name": "paidAmount",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null,
+          "noDecimal": false
+        }
+      },
+      {
+        "system": false,
         "id": "g1lqvenw",
         "name": "type",
         "type": "select",
@@ -945,8 +959,8 @@
     ],
     "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.role = \"manager\"",
-    "updateRule": "@request.auth.role = \"manager\" && @request.data.orderId = orderId",
+    "createRule": "(@request.auth.role = \"manager\" && (@request.data.paidAmount:isset = false || @request.data.paidAmount <= totalAmount)) || (@request.auth.id != \"\" && @request.data.type = \"pro_forma\" && @request.data.paidAmount:isset = false)",
+    "updateRule": "@request.auth.role = \"manager\" && @request.data.orderId = orderId && (@request.data.paidAmount:isset = false || @request.data.paidAmount <= totalAmount)",
     "deleteRule": "@request.auth.role = \"manager\"",
     "options": {}
   },

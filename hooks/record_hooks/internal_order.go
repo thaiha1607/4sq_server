@@ -1,13 +1,16 @@
 package record_hooks
 
 import (
+	"log/slog"
 	"math/rand/v2"
+	"net/http"
 	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
+	"github.com/pocketbase/pocketbase/daos"
 	"github.com/pocketbase/pocketbase/tools/types"
 	"github.com/samber/lo"
 	"github.com/thaiha1607/4sq_server/custom_models"
@@ -31,7 +34,7 @@ func forbidInvalidInternalOrderStatus(app *pocketbase.PocketBase) {
 	app.OnRecordBeforeUpdateRequest("internal_orders").Add(func(e *core.RecordUpdateEvent) error {
 		old, err := app.Dao().FindRecordById("internal_orders", e.Record.Id)
 		if err != nil {
-			return apis.NewNotFoundError("Internal order not found", nil)
+			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
 		}
 		if old.GetString("statusCodeId") != e.Record.GetString("statusCodeId") {
 			value, ok := utils.InternalOrderStatusCodeTransitions[old.GetString("statusCodeId")]
@@ -50,17 +53,145 @@ func forbidInvalidInternalOrderStatus(app *pocketbase.PocketBase) {
 	})
 }
 
+func updateOrderWhenInternalOrderShipped(dao *daos.Dao, internalOrderId string, orderId string) error {
+	internalOrderItems, err := dbquery.GetInternalOrderItemsByInternalOrderId(dao, internalOrderId)
+	if err != nil {
+		return apis.NewNotFoundError("", map[string]validation.Error{
+			"internalOrderId": validation.NewError("not_found", "Internal order items not found"),
+		})
+	}
+	for _, internalOrderItem := range internalOrderItems {
+		orderItem, err := dbquery.GetSingleOrderItem(dao, internalOrderItem.OrderItemId)
+		if err != nil {
+			return apis.NewNotFoundError("", nil)
+		}
+		orderItem.ShippedQty += internalOrderItem.Qty
+		if orderItem.ShippedQty > orderItem.OrderedQty {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"qty": validation.NewError("invalid_qty", "Shipped quantity exceeds ordered quantity"),
+			})
+		}
+		orderItem.MarkAsNotNew()
+		if err := dao.Save(orderItem); err != nil {
+			return err
+		}
+	}
+	order, err := dbquery.GetSingleOrder(dao, orderId)
+	if err != nil {
+		return apis.NewNotFoundError("", nil)
+	}
+	statusAllowed := []string{
+		order_status.Processing.ID(),
+		order_status.WaitingForAction.ID(),
+		order_status.PartiallyShipped.ID(),
+	}
+	if !lo.Contains(statusAllowed, order.StatusCodeId) {
+		return nil
+	}
+	// Get all order items
+	orderItems, err := dbquery.GetOrderItemsByOrderId(dao, orderId)
+	if err != nil {
+		return apis.NewNotFoundError("", nil)
+	}
+	allShipped := lo.EveryBy(orderItems, func(orderItem *custom_models.OrderItem) bool {
+		return orderItem.ShippedQty == orderItem.OrderedQty
+	})
+	if allShipped {
+		order.StatusCodeId = order_status.Shipped.ID()
+	} else {
+		if order.StatusCodeId == order_status.PartiallyShipped.ID() {
+			return nil
+		}
+		order.StatusCodeId = order_status.PartiallyShipped.ID()
+	}
+	order.MarkAsNotNew()
+	if err := dao.Save(order); err != nil {
+		return err
+	}
+	return nil
+}
+
+func updateQuantityInWarehouse(
+	dao *daos.Dao,
+	logger *slog.Logger,
+	internalOrderId string,
+	workingUnitId string,
+	delta int64,
+) error {
+	internalOrderItems, err := dbquery.GetInternalOrderItemsByInternalOrderId(dao, internalOrderId)
+	if err != nil {
+		return apis.NewNotFoundError("", map[string]validation.Error{
+			"internalOrderId": validation.NewError("not_found", "Internal order items not found"),
+		})
+	}
+	for _, internalOrderItem := range internalOrderItems {
+		orderItem, err := dbquery.GetSingleOrderItem(dao, internalOrderItem.OrderItemId)
+		if err != nil {
+			return apis.NewNotFoundError("", nil)
+		}
+		productQuantity, err := dbquery.GetSingleProductQuantitiyByCategoryIDAndWorkingUnitID(
+			dao,
+			orderItem.ProductCategoryId,
+			workingUnitId,
+		)
+		if err != nil {
+			if internalOrderItem.Qty == 0 {
+				logger.Warn("Failed to get product quantity", "data", map[string]string{
+					"categoryId":    orderItem.ProductCategoryId,
+					"workingUnitId": workingUnitId,
+				})
+				continue
+			} else {
+				return apis.NewBadRequestError("", map[string]validation.Error{
+					"qty": validation.NewError("invalid_qty", "Not enough quantity in warehouse"),
+				})
+			}
+		}
+		result := productQuantity.Qty + delta*internalOrderItem.Qty
+		if result < 0 {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"qty": validation.NewError("invalid_qty", "Not enough quantity in warehouse"),
+			})
+		}
+		productQuantity.Qty = result
+		productQuantity.MarkAsNotNew()
+		if err := dao.Save(productQuantity); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func assignDeliveryStaff(app *pocketbase.PocketBase) {
 	app.OnRecordBeforeUpdateRequest("internal_orders").Add(func(e *core.RecordUpdateEvent) error {
 		old, err := app.Dao().FindRecordById("internal_orders", e.Record.Id)
 		if err != nil {
-			return apis.NewNotFoundError("Internal order not found", nil)
+			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
 		}
 		shipmentIdGone := old.GetString("shipmentId") != e.Record.GetString("shipmentId")
 		isProcessingToShipped := old.GetString("statusCodeId") == order_status.Processing.ID() &&
 			e.Record.GetString("statusCodeId") == order_status.Shipped.ID()
 		if !shipmentIdGone && !isProcessingToShipped {
 			return nil
+		}
+		if isProcessingToShipped {
+			if err := updateQuantityInWarehouse(
+				app.Dao(),
+				app.Logger(),
+				e.Record.Id,
+				e.Record.GetString("srcWorkingUnitId"),
+				-1,
+			); err != nil {
+				return err
+			}
+			if err := updateOrderWhenInternalOrderShipped(
+				app.Dao(),
+				e.Record.Id,
+				e.Record.GetString("rootOrderId"),
+			); err != nil {
+				return err
+			}
+
 		}
 		shipmentId := old.GetString("shipmentId")
 		internalOrders, err := dbquery.GetInternalOrdersByShipmentId(app.Dao(), shipmentId)
@@ -86,9 +217,12 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			allShippedInternalOrder = append(allShippedInternalOrder, newModel)
 		}
 		readyToDeliver := len(lo.Filter(internalOrders, func(internalOrder *custom_models.InternalOrder, _ int) bool {
-			return internalOrder.StatusCodeId == order_status.Pending.ID() ||
-				internalOrder.StatusCodeId == order_status.Processing.ID() ||
-				internalOrder.StatusCodeId == order_status.WaitingForAction.ID()
+			allowedStatus := []string{
+				order_status.Pending.ID(),
+				order_status.Processing.ID(),
+				order_status.WaitingForAction.ID(),
+			}
+			return lo.Contains(allowedStatus, internalOrder.StatusCodeId)
 		})) == 0
 
 		if readyToDeliver {
@@ -154,6 +288,7 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			staffIdx := rand.IntN(len(deliveryStaffs))
 			staffId := deliveryStaffs[staffIdx].Id
 			shipmentAssignment := &custom_models.ShipmentAssignment{
+				OtherInfo:  e.Record.GetString("otherInfo"),
 				Status:     string(assignment_status.Assigned),
 				ShipmentId: shipmentId,
 				StaffId:    staffId,

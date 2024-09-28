@@ -9,7 +9,7 @@ import (
 func GetSingleOrder(dao *daos.Dao, id string) (*custom_models.Order, error) {
 	var order *custom_models.Order
 
-	err := custom_models.OrderItemQuery(dao).
+	err := custom_models.OrderQuery(dao).
 		Where(dbx.HashExp{"id": id}).
 		One(&order)
 	if err != nil {

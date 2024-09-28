@@ -1,6 +1,8 @@
 package record_hooks
 
 import (
+	"net/http"
+
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
@@ -15,7 +17,7 @@ func addTransactionHistoryHooks(app *pocketbase.PocketBase) {
 	app.OnRecordBeforeUpdateRequest(utils.AllowedTransactionHistoryEntities...).Add(func(e *core.RecordUpdateEvent) error {
 		old, err := app.Dao().FindRecordById(e.Collection.Name, e.Record.Id)
 		if err != nil {
-			return apis.NewNotFoundError("Record from "+e.Collection.Name+" not found", nil)
+			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
 		}
 		if old.GetString("statusCodeId") != e.Record.GetString("statusCodeId") {
 			return dbquery.CreateNewTransactionHistory(app.Dao(), e.Collection.Name, e.Record)

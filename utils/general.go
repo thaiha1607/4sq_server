@@ -20,6 +20,7 @@ var OrderStatusCodeTransitions = map[string][]string{
 		order_status.Confirmed.ID(),
 		order_status.Processing.ID(),
 		order_status.Cancelled.ID(),
+		order_status.OnHold.ID(),
 	},
 	order_status.Confirmed.ID(): {
 		order_status.Processing.ID(),
@@ -52,6 +53,7 @@ var OrderStatusCodeTransitions = map[string][]string{
 		order_status.Processing.ID(),
 	},
 	order_status.FailedDeliveryAttempt.ID(): {
+		order_status.PartiallyDelivered.ID(),
 		order_status.Delivered.ID(),
 		order_status.Cancelled.ID(),
 	},
@@ -69,6 +71,7 @@ var InternalOrderStatusCodeTransitions = map[string][]string{
 	order_status.Pending.ID(): {
 		order_status.Processing.ID(),
 		order_status.Cancelled.ID(),
+		order_status.OnHold.ID(),
 	},
 	order_status.Processing.ID(): {
 		order_status.WaitingForAction.ID(),
@@ -148,6 +151,7 @@ var ShipmentStatusCodeTransitions = map[string][]string{
 	},
 	shipment_status.Delivered.ID(): {},
 	shipment_status.FailedDeliveryAttempt.ID(): {
+		shipment_status.Delivered.ID(),
 		shipment_status.Returned.ID(),
 		shipment_status.Cancelled.ID(),
 	},

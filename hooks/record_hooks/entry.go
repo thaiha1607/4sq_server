@@ -7,6 +7,7 @@ func RegisterRecordHooks(app *pocketbase.PocketBase) {
 	forbidInvalidInternalOrderStatus(app)
 	forbidInvalidInvoiceStatus(app)
 	forbidInvalidShipmentStatus(app)
+	updateOrderWhenShipmentDelivered(app)
 	assignWarehouseStaff(app)
 	assignDeliveryStaff(app)
 	addTransactionHistoryHooks(app)

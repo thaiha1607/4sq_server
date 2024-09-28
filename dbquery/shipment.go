@@ -9,7 +9,7 @@ import (
 func GetShipmentsByOrderId(dao *daos.Dao, orderId string) ([]*custom_models.Shipment, error) {
 	var shipments []*custom_models.Shipment
 	err := custom_models.
-		InternalOrderQuery(dao).
+		ShipmentQuery(dao).
 		Where(dbx.HashExp{"orderId": orderId}).
 		All(&shipments)
 	if err != nil {
@@ -20,7 +20,8 @@ func GetShipmentsByOrderId(dao *daos.Dao, orderId string) ([]*custom_models.Ship
 
 func GetSingleShipment(dao *daos.Dao, id string) (*custom_models.Shipment, error) {
 	var shipment *custom_models.Shipment
-	err := custom_models.ShipmentQuery(dao).
+	err := custom_models.
+		ShipmentQuery(dao).
 		Where(dbx.HashExp{"id": id}).
 		One(&shipment)
 	if err != nil {
