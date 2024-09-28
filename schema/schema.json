@@ -630,6 +630,38 @@
           "maxSelect": 1,
           "displayFields": null
         }
+      },
+      {
+        "system": false,
+        "id": "gvj94it2",
+        "name": "srcWorkingUnitId",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "cr8iizw10m7kh1d",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "k4lbq406",
+        "name": "dstWorkingUnitId",
+        "type": "relation",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "cr8iizw10m7kh1d",
+          "cascadeDelete": false,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
       }
     ],
     "indexes": [],
@@ -1032,6 +1064,20 @@
       },
       {
         "system": false,
+        "id": "hygeyvnx",
+        "name": "shippedQty",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null,
+          "noDecimal": true
+        }
+      },
+      {
+        "system": false,
         "id": "rdcou6v1",
         "name": "unitPrice",
         "type": "number",
@@ -1096,8 +1142,8 @@
     ],
     "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\" && (@request.data.receivedQty:isset = false || @request.data.receivedQty = 0)",
-    "updateRule": "((orderId.creatorId = @request.auth.id && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
+    "createRule": "@request.auth.id != \"\" && (@request.data.shippedQty:isset = false || @request.data.shippedQty = 0) && (@request.data.receivedQty:isset = false || @request.data.receivedQty = 0)",
+    "updateRule": "((orderId.creatorId = @request.auth.id && @request.data.shippedQty:isset = false && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
     "deleteRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
@@ -2330,38 +2376,6 @@
         "unique": false,
         "options": {
           "collectionId": "v6f615blwqyoe4d",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "ryoqoems",
-        "name": "srcWorkingUnitId",
-        "type": "relation",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "cr8iizw10m7kh1d",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "zp24tcao",
-        "name": "dstWorkingUnitId",
-        "type": "relation",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "cr8iizw10m7kh1d",
           "cascadeDelete": false,
           "minSelect": null,
           "maxSelect": 1,

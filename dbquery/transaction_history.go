@@ -19,8 +19,6 @@ func CreateNewTransactionHistory(dao *daos.Dao, entityType string, r *models.Rec
 		StatusCodeId: r.GetString("statusCodeId"),
 		Note:         "",
 	}
-	if err := dao.Save(model); err != nil {
-		return err
-	}
+	_ = dao.Save(model)
 	return nil
 }

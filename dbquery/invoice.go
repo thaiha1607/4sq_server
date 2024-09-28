@@ -7,11 +7,11 @@ import (
 )
 
 // Get all invoices by order id, sorted descending by created_at
-func GetInvoicesByOrderId(dao *daos.Dao, orderID string) ([]*custom_models.Invoice, error) {
+func GetInvoicesByOrderId(dao *daos.Dao, orderId string) ([]*custom_models.Invoice, error) {
 	var invoices []*custom_models.Invoice
 	err := custom_models.
 		InvoiceQuery(dao).
-		Where(dbx.HashExp{"orderId": orderID}).
+		Where(dbx.HashExp{"orderId": orderId}).
 		OrderBy("created DESC").
 		All(&invoices)
 	if err != nil {
