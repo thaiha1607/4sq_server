@@ -13,7 +13,7 @@ type StaffInfo struct {
 	StatusCode    string `db:"statusCode" json:"statusCode"`
 	Role          string `db:"role" json:"role"`
 	UserId        string `db:"userId" json:"userId"`
-	WorkingUnitId string `db:"workingUnitId" json:"workingUnitId,omitempty"`
+	WorkingUnitId string `db:"workingUnitId" json:"workingUnitId"`
 }
 
 func (m *StaffInfo) TableName() string {

@@ -382,6 +382,35 @@
     "options": {}
   },
   {
+    "id": "90dgpouuugdj3g8",
+    "name": "daily_income",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "obi8scyl",
+        "name": "amountOfChange",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": false
+        }
+      }
+    ],
+    "indexes": [],
+    "listRule": "@request.auth.role = \"manager\"",
+    "viewRule": "@request.auth.role = \"manager\"",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "options": {}
+  },
+  {
     "id": "68wsl8pf0ab44u1",
     "name": "guest_info",
     "type": "base",
@@ -1092,6 +1121,20 @@
       },
       {
         "system": false,
+        "id": "brpue4wf",
+        "name": "assignedQty",
+        "type": "number",
+        "required": false,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 0,
+          "max": null,
+          "noDecimal": true
+        }
+      },
+      {
+        "system": false,
         "id": "rdcou6v1",
         "name": "unitPrice",
         "type": "number",
@@ -1156,8 +1199,8 @@
     ],
     "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
-    "createRule": "@request.auth.id != \"\" && (@request.data.shippedQty:isset = false || @request.data.shippedQty = 0) && (@request.data.receivedQty:isset = false || @request.data.receivedQty = 0)",
-    "updateRule": "((orderId.creatorId = @request.auth.id && @request.data.shippedQty:isset = false && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
+    "createRule": "@request.auth.id != \"\" && (@request.data.assignedQty:isset = false || @request.data.assignedQty = 0) && (@request.data.shippedQty:isset = false || @request.data.shippedQty = 0) && (@request.data.receivedQty:isset = false || @request.data.receivedQty = 0)",
+    "updateRule": "((orderId.creatorId = @request.auth.id && @request.data.assignedQty:isset = false && @request.data.shippedQty:isset = false && @request.data.receivedQty:isset = false) || (@request.auth.id != \"\" && @request.auth.role != \"customer\")) && @request.data.orderId = orderId && @request.data.productCategoryId = productCategoryId",
     "deleteRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "options": {}
   },
@@ -1559,6 +1602,20 @@
     "schema": [
       {
         "system": false,
+        "id": "24k4ot5g",
+        "name": "priority",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": 1,
+          "max": 5,
+          "noDecimal": true
+        }
+      },
+      {
+        "system": false,
         "id": "drgo0oo1",
         "name": "qty",
         "type": "number",
@@ -1612,6 +1669,51 @@
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "deleteRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
+    "options": {}
+  },
+  {
+    "id": "bg69cxt80nkfws1",
+    "name": "product_quantity_history",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "system": false,
+        "id": "jfgew7gh",
+        "name": "categoryId",
+        "type": "relation",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "collectionId": "upkshg4h89ndt95",
+          "cascadeDelete": true,
+          "minSelect": null,
+          "maxSelect": 1,
+          "displayFields": null
+        }
+      },
+      {
+        "system": false,
+        "id": "jwg5tfn2",
+        "name": "amountOfChange",
+        "type": "number",
+        "required": true,
+        "presentable": false,
+        "unique": false,
+        "options": {
+          "min": null,
+          "max": null,
+          "noDecimal": true
+        }
+      }
+    ],
+    "indexes": [],
+    "listRule": "@request.auth.role = \"manager\"",
+    "viewRule": "@request.auth.role = \"manager\"",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
     "options": {}
   },
   {
@@ -2106,7 +2208,7 @@
         "id": "kbmzxgda",
         "name": "workingUnitId",
         "type": "relation",
-        "required": false,
+        "required": true,
         "presentable": false,
         "unique": false,
         "options": {
@@ -2505,23 +2607,7 @@
     "schema": [
       {
         "system": false,
-        "id": "aexhk0fk",
-        "name": "categoryId",
-        "type": "relation",
-        "required": true,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "collectionId": "upkshg4h89ndt95",
-          "cascadeDelete": false,
-          "minSelect": null,
-          "maxSelect": 1,
-          "displayFields": null
-        }
-      },
-      {
-        "system": false,
-        "id": "nxedrskh",
+        "id": "t7aymr5p",
         "name": "totalQty",
         "type": "json",
         "required": false,
@@ -2539,7 +2625,7 @@
     "updateRule": null,
     "deleteRule": null,
     "options": {
-      "query": "SELECT (ROW_NUMBER() OVER()) AS id, categoryId, SUM(qty) AS totalQty\nFROM product_quantities\nGROUP BY categoryId;"
+      "query": "SELECT categoryId as id, SUM(qty) AS totalQty\nFROM product_quantities\nGROUP BY categoryId;"
     }
   }
 ]

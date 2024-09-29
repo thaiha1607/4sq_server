@@ -6,7 +6,9 @@ import (
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/samber/lo"
+	"github.com/thaiha1607/4sq_server/custom_models"
 	"github.com/thaiha1607/4sq_server/utils"
+	"github.com/thaiha1607/4sq_server/utils/enum/invoice_status"
 )
 
 func forbidInvalidInvoiceStatus(app *pocketbase.PocketBase) {
@@ -27,6 +29,18 @@ func forbidInvalidInvoiceStatus(app *pocketbase.PocketBase) {
 					"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code transition"),
 				})
 			}
+		}
+		return nil
+	})
+}
+
+func updateDailyIncomeWhenInvoiceIsPaid(app *pocketbase.PocketBase) {
+	app.OnRecordAfterUpdateRequest("invoices").Add(func(e *core.RecordUpdateEvent) error {
+		if e.Record.GetString("statusCodeId") == invoice_status.Paid.ID() {
+			dailyIncome := &custom_models.DailyIncome{
+				AmountOfChange: e.Record.GetFloat("totalAmount"),
+			}
+			_ = app.Dao().Save(dailyIncome)
 		}
 		return nil
 	})

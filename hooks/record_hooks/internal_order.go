@@ -53,6 +53,38 @@ func forbidInvalidInternalOrderStatus(app *pocketbase.PocketBase) {
 	})
 }
 
+func updateOrderItemWhenInternalOrderCancelled(app *pocketbase.PocketBase) {
+	app.OnRecordAfterUpdateRequest("internal_orders").Add(func(e *core.RecordUpdateEvent) error {
+		if e.Record.GetString("statusCodeId") != order_status.Cancelled.ID() {
+			return nil
+		}
+		err := app.Dao().RunInTransaction(func(txDao *daos.Dao) error {
+			internalOrderItems, err := dbquery.GetInternalOrderItemsByInternalOrderId(txDao, e.Record.Id)
+			if err != nil {
+				return apis.NewNotFoundError("", map[string]validation.Error{
+					"internalOrderId": validation.NewError("not_found", "Internal order items not found"),
+				})
+			}
+			for _, internalOrderItem := range internalOrderItems {
+				orderItem, err := dbquery.GetSingleOrderItem(txDao, internalOrderItem.OrderItemId)
+				if err != nil {
+					return apis.NewNotFoundError("", nil)
+				}
+				orderItem.AssignedQty -= internalOrderItem.Qty
+				if orderItem.AssignedQty < 0 {
+					orderItem.AssignedQty = 0
+				}
+				orderItem.MarkAsNotNew()
+				if err := txDao.Save(orderItem); err != nil {
+					return err
+				}
+			}
+			return nil
+		})
+		return err
+	})
+}
+
 func updateOrderWhenInternalOrderShipped(dao *daos.Dao, internalOrderId string, orderId string) error {
 	internalOrderItems, err := dbquery.GetInternalOrderItemsByInternalOrderId(dao, internalOrderId)
 	if err != nil {
@@ -129,7 +161,7 @@ func updateQuantityInWarehouse(
 		if err != nil {
 			return apis.NewNotFoundError("", nil)
 		}
-		productQuantity, err := dbquery.GetSingleProductQuantitiyByCategoryIDAndWorkingUnitID(
+		productQuantity, err := dbquery.GetSingleProductQuantityByCategoryIDAndWorkingUnitID(
 			dao,
 			orderItem.ProductCategoryId,
 			workingUnitId,
@@ -147,15 +179,22 @@ func updateQuantityInWarehouse(
 				})
 			}
 		}
-		result := productQuantity.Qty + delta*internalOrderItem.Qty
-		if result < 0 {
+		productQuantity.Qty += (delta * internalOrderItem.Qty)
+		if productQuantity.Qty < 0 {
 			return apis.NewBadRequestError("", map[string]validation.Error{
 				"qty": validation.NewError("invalid_qty", "Not enough quantity in warehouse"),
 			})
 		}
-		productQuantity.Qty = result
 		productQuantity.MarkAsNotNew()
 		if err := dao.Save(productQuantity); err != nil {
+			return err
+		}
+		// Update product quantity history
+		productQuantityHistory := &custom_models.ProductQuantityHistory{
+			CategoryId:     orderItem.ProductCategoryId,
+			AmountOfChange: float64(delta * internalOrderItem.Qty),
+		}
+		if err := dao.Save(productQuantityHistory); err != nil {
 			return err
 		}
 	}
@@ -175,19 +214,27 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			return nil
 		}
 		if isProcessingToShipped {
-			if err := updateQuantityInWarehouse(
-				app.Dao(),
-				app.Logger(),
-				e.Record.Id,
-				e.Record.GetString("srcWorkingUnitId"),
-				-1,
+			if err := app.Dao().RunInTransaction(
+				func(txDao *daos.Dao) error {
+					return updateQuantityInWarehouse(
+						txDao,
+						app.Logger(),
+						e.Record.Id,
+						e.Record.GetString("srcWorkingUnitId"),
+						-1,
+					)
+				},
 			); err != nil {
 				return err
 			}
-			if err := updateOrderWhenInternalOrderShipped(
-				app.Dao(),
-				e.Record.Id,
-				e.Record.GetString("rootOrderId"),
+			if err := app.Dao().RunInTransaction(
+				func(txDao *daos.Dao) error {
+					return updateOrderWhenInternalOrderShipped(
+						txDao,
+						e.Record.Id,
+						e.Record.GetString("rootOrderId"),
+					)
+				},
 			); err != nil {
 				return err
 			}
@@ -224,25 +271,27 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			}
 			return lo.Contains(allowedStatus, internalOrder.StatusCodeId)
 		})) == 0
-
-		if readyToDeliver {
-			app.Logger().Info("Assigning delivery staff", "shipmentId", shipmentId)
+		if !readyToDeliver {
+			return nil
+		}
+		app.Logger().Info("Assigning delivery staff", "shipmentId", shipmentId)
+		err = app.Dao().RunInTransaction(func(txDao *daos.Dao) error {
 			// Update shipment status to Processed
-			shipment, err := dbquery.GetSingleShipment(app.Dao(), shipmentId)
+			shipment, err := dbquery.GetSingleShipment(txDao, shipmentId)
 			if err != nil {
 				app.Logger().Error("Failed to get shipment", "error", err)
 				return nil
 			}
 			shipment.StatusCodeId = shipment_status.Processed.ID()
 			shipment.MarkAsNotNew()
-			if err := app.Dao().Save(shipment); err != nil {
+			if err := txDao.Save(shipment); err != nil {
 				app.Logger().Error("Failed to save shipment", "error", err)
 				return nil
 			}
 			// Create shipment items
 			shipmentItems := make(map[string]*custom_models.ShipmentItem)
 			for _, internalOrder := range allShippedInternalOrder {
-				internalOrderItems, err := dbquery.GetInternalOrderItemsByInternalOrderId(app.Dao(), internalOrder.Id)
+				internalOrderItems, err := dbquery.GetInternalOrderItemsByInternalOrderId(txDao, internalOrder.Id)
 				if err != nil {
 					app.Logger().Error("Failed to get internal order items", "error", err)
 					return nil
@@ -264,7 +313,7 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			}
 			// Save shipment items
 			for _, shipmentItem := range shipmentItems {
-				if err := app.Dao().Save(shipmentItem); err != nil {
+				if err := txDao.Save(shipmentItem); err != nil {
 					app.Logger().Error("Failed to save shipment item", "error", err)
 					return nil
 				}
@@ -275,12 +324,12 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			shipment.DeliveryDate = fiveDaysLater
 			shipment.StatusCodeId = shipment_status.Shipped.ID()
 			shipment.MarkAsNotNew()
-			if err := app.Dao().Save(shipment); err != nil {
+			if err := txDao.Save(shipment); err != nil {
 				app.Logger().Error("Failed to save shipment", "error", err)
 				return nil
 			}
 			// Get delivery staff
-			deliveryStaffs, err := dbquery.GetStaffsByRole(app.Dao(), string(staff_role.Delivery))
+			deliveryStaffs, err := dbquery.GetStaffsByRole(txDao, string(staff_role.Delivery))
 			if err != nil {
 				app.Logger().Error("Failed to get delivery staffs", "error", err)
 				return nil
@@ -293,12 +342,16 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 				ShipmentId: shipmentId,
 				StaffId:    staffId,
 			}
-			if err := app.Dao().Save(shipmentAssignment); err != nil {
+			if err := txDao.Save(shipmentAssignment); err != nil {
 				app.Logger().Error("Failed to save shipment assignment", "error", err)
 				return nil
 			}
-			app.Logger().Info("Assigned delivery staff", "shipmentId", shipmentId)
+			return nil
+		})
+		if err != nil {
+			return err
 		}
+		app.Logger().Info("Assigned delivery staff", "shipmentId", shipmentId)
 		return nil
 	})
 }

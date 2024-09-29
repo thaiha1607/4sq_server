@@ -16,3 +16,14 @@ func GetStaffsByRole(dao *daos.Dao, role string) ([]*custom_models.StaffInfo, er
 	}
 	return staffs, nil
 }
+
+func GetStaffsByWorkingUnitId(dao *daos.Dao, workingUnitId string) ([]*custom_models.StaffInfo, error) {
+	var staffs []*custom_models.StaffInfo
+	err := custom_models.StaffInfoQuery(dao).
+		Where(dbx.HashExp{"workingUnitId": workingUnitId}).
+		All(&staffs)
+	if err != nil {
+		return nil, err
+	}
+	return staffs, nil
+}

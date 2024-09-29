@@ -10,8 +10,7 @@ var _ models.Model = (*ProductQuantitySummary)(nil)
 
 type ProductQuantitySummary struct {
 	models.BaseModel
-	CategoryId string `db:"categoryId" json:"categoryId"`
-	TotalQty   int    `db:"totalQty" json:"totalQty"`
+	TotalQty int64 `db:"totalQty" json:"totalQty"`
 }
 
 func (m *ProductQuantitySummary) TableName() string {

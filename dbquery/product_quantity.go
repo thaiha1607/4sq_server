@@ -6,7 +6,8 @@ import (
 	"github.com/thaiha1607/4sq_server/custom_models"
 )
 
-func GetSingleProductQuantitiyByCategoryIDAndWorkingUnitID(
+// Return a single product quantity summary by category ID
+func GetSingleProductQuantityByCategoryIDAndWorkingUnitID(
 	dao *daos.Dao,
 	categoryId string,
 	workingUnitId string,
@@ -22,4 +23,23 @@ func GetSingleProductQuantitiyByCategoryIDAndWorkingUnitID(
 		return nil, err
 	}
 	return productQuantity, nil
+}
+
+// Return a list of product quantities by category ID sorted by priority DESC, qty DESC
+func GetProductQuantitiesByCategoryID(
+	dao *daos.Dao,
+	categoryId string,
+) (
+	[]*custom_models.ProductQuantity,
+	error,
+) {
+	var productQuantities []*custom_models.ProductQuantity
+	err := custom_models.ProductQuantityQuery(dao).
+		Where(dbx.HashExp{"categoryId": categoryId}).
+		OrderBy("priority DESC", "qty DESC").
+		All(&productQuantities)
+	if err != nil {
+		return nil, err
+	}
+	return productQuantities, nil
 }
