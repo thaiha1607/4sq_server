@@ -16,33 +16,34 @@ import (
 
 func forbidInvalidOrderStatus(app *pocketbase.PocketBase) {
 	app.OnRecordBeforeCreateRequest("orders").Add(func(e *core.RecordCreateEvent) error {
-		if e.Record.GetString("statusCodeId") != order_status.Pending.ID() {
-			return apis.NewBadRequestError("", map[string]validation.Error{
-				"statusCodeId": validation.NewError(
-					"invalid_status_code",
-					"When creating an order, the status code must be 'Pending'",
-				),
-			})
+		if e.Record.GetString("statusCodeId") == order_status.Pending.ID() {
+			return nil
 		}
-		return nil
+		return apis.NewBadRequestError("", map[string]validation.Error{
+			"statusCodeId": validation.NewError(
+				"invalid_status_code",
+				"When creating an order, the status code must be 'Pending'",
+			),
+		})
 	})
 	app.OnRecordBeforeUpdateRequest("orders").Add(func(e *core.RecordUpdateEvent) error {
 		old, err := dbquery.GetSingleOrder(app.Dao(), e.Record.Id)
 		if err != nil {
 			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
 		}
-		if old.StatusCodeId != e.Record.GetString("statusCodeId") {
-			value, ok := utils.OrderStatusCodeTransitions[old.StatusCodeId]
-			if !ok {
-				return apis.NewBadRequestError("", map[string]validation.Error{
-					"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code"),
-				})
-			}
-			if !lo.Contains(value, e.Record.GetString("statusCodeId")) {
-				return apis.NewBadRequestError("", map[string]validation.Error{
-					"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code transition"),
-				})
-			}
+		if old.StatusCodeId == e.Record.GetString("statusCodeId") {
+			return nil
+		}
+		value, ok := utils.OrderStatusCodeTransitions[old.StatusCodeId]
+		if !ok {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code"),
+			})
+		}
+		if !lo.Contains(value, e.Record.GetString("statusCodeId")) {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code transition"),
+			})
 		}
 		return nil
 	})
@@ -55,7 +56,8 @@ func assignWarehouseStaff(app *pocketbase.PocketBase) {
 			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
 		}
 		// Only assign warehouse staffs when the order is changed from Pending to Confirmed
-		if old.StatusCodeId != order_status.Pending.ID() || e.Record.GetString("statusCodeId") != order_status.Confirmed.ID() {
+		if old.StatusCodeId != order_status.Pending.ID() ||
+			e.Record.GetString("statusCodeId") != order_status.Confirmed.ID() {
 			return nil
 		}
 		return shared.AssignWarehouseStaff(app.Dao(), app.Logger(), e.Record)

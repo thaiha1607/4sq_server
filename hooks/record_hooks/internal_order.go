@@ -1,6 +1,7 @@
 package record_hooks
 
 import (
+	"errors"
 	"log/slog"
 	"math/rand/v2"
 	"net/http"
@@ -24,30 +25,31 @@ import (
 
 func forbidInvalidInternalOrderStatus(app *pocketbase.PocketBase) {
 	app.OnRecordBeforeCreateRequest("internal_orders").Add(func(e *core.RecordCreateEvent) error {
-		if e.Record.GetString("statusCodeId") != order_status.Pending.ID() {
-			return apis.NewBadRequestError("", map[string]validation.Error{
-				"statusCodeId": validation.NewError("invalid_status_code", "When creating an internal order, the status code must be 'Pending'"),
-			})
+		if e.Record.GetString("statusCodeId") == order_status.Pending.ID() {
+			return nil
 		}
-		return nil
+		return apis.NewBadRequestError("", map[string]validation.Error{
+			"statusCodeId": validation.NewError("invalid_status_code", "When creating an internal order, the status code must be 'Pending'"),
+		})
 	})
 	app.OnRecordBeforeUpdateRequest("internal_orders").Add(func(e *core.RecordUpdateEvent) error {
 		old, err := app.Dao().FindRecordById("internal_orders", e.Record.Id)
 		if err != nil {
 			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
 		}
-		if old.GetString("statusCodeId") != e.Record.GetString("statusCodeId") {
-			value, ok := utils.InternalOrderStatusCodeTransitions[old.GetString("statusCodeId")]
-			if !ok {
-				return apis.NewBadRequestError("", map[string]validation.Error{
-					"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code"),
-				})
-			}
-			if !lo.Contains(value, e.Record.GetString("statusCodeId")) {
-				return apis.NewBadRequestError("", map[string]validation.Error{
-					"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code transition"),
-				})
-			}
+		if old.GetString("statusCodeId") == e.Record.GetString("statusCodeId") {
+			return nil
+		}
+		value, ok := utils.InternalOrderStatusCodeTransitions[old.GetString("statusCodeId")]
+		if !ok {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code"),
+			})
+		}
+		if !lo.Contains(value, e.Record.GetString("statusCodeId")) {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code transition"),
+			})
 		}
 		return nil
 	})
@@ -58,6 +60,7 @@ func updateOrderItemWhenInternalOrderCancelled(app *pocketbase.PocketBase) {
 		if e.Record.GetString("statusCodeId") != order_status.Cancelled.ID() {
 			return nil
 		}
+		app.Logger().Info("Updating order item when internal order cancelled", "internalOrderId", e.Record.Id)
 		err := app.Dao().RunInTransaction(func(txDao *daos.Dao) error {
 			internalOrderItems, err := dbquery.GetInternalOrderItemsByInternalOrderId(txDao, e.Record.Id)
 			if err != nil {
@@ -65,10 +68,12 @@ func updateOrderItemWhenInternalOrderCancelled(app *pocketbase.PocketBase) {
 					"internalOrderId": validation.NewError("not_found", "Internal order items not found"),
 				})
 			}
+			var transactionErr error = nil
 			for _, internalOrderItem := range internalOrderItems {
 				orderItem, err := dbquery.GetSingleOrderItem(txDao, internalOrderItem.OrderItemId)
 				if err != nil {
-					return apis.NewNotFoundError("", nil)
+					transactionErr = errors.Join(transactionErr, err)
+					continue
 				}
 				orderItem.AssignedQty -= internalOrderItem.Qty
 				if orderItem.AssignedQty < 0 {
@@ -76,12 +81,58 @@ func updateOrderItemWhenInternalOrderCancelled(app *pocketbase.PocketBase) {
 				}
 				orderItem.MarkAsNotNew()
 				if err := txDao.Save(orderItem); err != nil {
-					return err
+					transactionErr = errors.Join(transactionErr, err)
+					continue
 				}
 			}
 			return nil
 		})
-		return err
+		if err != nil {
+			app.Logger().Error("Failed to update order item when internal order cancelled", "error", err)
+			return nil
+		}
+		app.Logger().Info("Updated order item when internal order cancelled", "internalOrderId", e.Record.Id)
+		return nil
+	})
+}
+
+func updateOrderItemWhenInternalOrderItemQtyChanged(app *pocketbase.PocketBase) {
+	app.OnRecordBeforeUpdateRequest("internal_order_items").Add(func(e *core.RecordUpdateEvent) error {
+		old, err := dbquery.GetSingleInternalOrderItem(app.Dao(), e.Record.Id)
+		if err != nil {
+			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
+		}
+		oldQty := old.Qty
+		newQty := int64(e.Record.GetInt("qty"))
+		if oldQty == newQty {
+			return nil
+		}
+
+		orderItem, err := dbquery.GetSingleOrderItem(app.Dao(), e.Record.GetString("orderItemId"))
+		if err != nil {
+			return apis.NewNotFoundError("", nil)
+		}
+		amountOfChange := newQty - oldQty
+		if newQty < oldQty {
+			orderItem.AssignedQty += amountOfChange
+			if orderItem.AssignedQty < 0 {
+				orderItem.AssignedQty = 0
+			}
+		} else {
+			orderItem.AssignedQty += amountOfChange
+			if orderItem.AssignedQty > orderItem.OrderedQty {
+				return apis.NewBadRequestError("", map[string]validation.Error{
+					"qty": validation.NewError("invalid_qty", "Assigned quantity exceeds ordered quantity"),
+				})
+			}
+		}
+
+		orderItem.MarkAsNotNew()
+		if err := app.Dao().Save(orderItem); err != nil {
+			return err
+		}
+
+		return nil
 	})
 }
 

@@ -85,6 +85,9 @@ func AssignWarehouseStaff(dao *daos.Dao, logger *slog.Logger, orderRecord *model
 			)
 			orderItemQty -= assignedQty
 		}
+		if orderItem.AssignedQty == orderItem.OrderedQty-orderItemQty {
+			continue
+		}
 		orderItem.AssignedQty = orderItem.OrderedQty - orderItemQty
 		if err := dao.Save(orderItem); err != nil {
 			logger.Error("Failed to save order item", "error", err)

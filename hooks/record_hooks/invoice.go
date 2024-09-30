@@ -17,18 +17,19 @@ func forbidInvalidInvoiceStatus(app *pocketbase.PocketBase) {
 		if err != nil {
 			return apis.NewApiError(500, "Something happened on our end", nil)
 		}
-		if old.GetString("statusCodeId") != e.Record.GetString("statusCodeId") {
-			value, ok := utils.InvoiceStatusCodeTransitions[old.GetString("statusCodeId")]
-			if !ok {
-				return apis.NewBadRequestError("", map[string]validation.Error{
-					"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code"),
-				})
-			}
-			if !lo.Contains(value, e.Record.GetString("statusCodeId")) {
-				return apis.NewBadRequestError("", map[string]validation.Error{
-					"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code transition"),
-				})
-			}
+		if old.GetString("statusCodeId") == e.Record.GetString("statusCodeId") {
+			return nil
+		}
+		value, ok := utils.InvoiceStatusCodeTransitions[old.GetString("statusCodeId")]
+		if !ok {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code"),
+			})
+		}
+		if !lo.Contains(value, e.Record.GetString("statusCodeId")) {
+			return apis.NewBadRequestError("", map[string]validation.Error{
+				"statusCodeId": validation.NewError("invalid_status_code", "Invalid status code transition"),
+			})
 		}
 		return nil
 	})

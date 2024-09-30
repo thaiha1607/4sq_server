@@ -22,3 +22,20 @@ func GetInternalOrderItemsByInternalOrderId(dao *daos.Dao, internalOrderId strin
 
 	return internalOrderItems, nil
 }
+
+func GetSingleInternalOrderItem(dao *daos.Dao, id string) (*custom_models.InternalOrderItem, error) {
+	var internalOrderItem *custom_models.InternalOrderItem
+
+	err := custom_models.
+		InternalOrderItemQuery(dao).
+		Where(dbx.HashExp{
+			"id": id,
+		},
+		).
+		One(&internalOrderItem)
+	if err != nil {
+		return nil, err
+	}
+
+	return internalOrderItem, nil
+}
