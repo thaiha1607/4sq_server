@@ -1,6 +1,9 @@
 package utils
 
 import (
+	"time"
+
+	"github.com/pocketbase/pocketbase/tools/types"
 	"github.com/thaiha1607/4sq_server/utils/enum/invoice_status"
 	"github.com/thaiha1607/4sq_server/utils/enum/order_status"
 	"github.com/thaiha1607/4sq_server/utils/enum/shipment_status"
@@ -14,6 +17,8 @@ var AllowedTransactionHistoryEntities = []string{
 	"orders",
 	"shipments",
 }
+
+var ZeroUnixTime, _ = types.ParseDateTime(time.Unix(0, 0))
 
 var OrderStatusCodeTransitions = map[string][]string{
 	order_status.Pending.ID(): {
@@ -51,6 +56,7 @@ var OrderStatusCodeTransitions = map[string][]string{
 	order_status.Delivered.ID(): {},
 	order_status.OnHold.ID(): {
 		order_status.Confirmed.ID(),
+		order_status.Cancelled.ID(),
 	},
 	order_status.FailedDeliveryAttempt.ID(): {
 		order_status.PartiallyDelivered.ID(),
@@ -89,6 +95,7 @@ var InternalOrderStatusCodeTransitions = map[string][]string{
 	order_status.Cancelled.ID(): {},
 	order_status.OnHold.ID(): {
 		order_status.Processing.ID(),
+		order_status.Cancelled.ID(),
 	},
 }
 

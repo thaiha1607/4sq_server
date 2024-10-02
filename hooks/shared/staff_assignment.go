@@ -126,7 +126,13 @@ func AssignWarehouseStaff(dao *daos.Dao, logger *slog.Logger, orderRecord *model
 	}
 	invoice := finalInvoices[0]
 	shipentCreation := &custom_models.Shipment{
-		Type:         string(shipment_type.Outbound),
+		Type: string(shipment_type.Outbound),
+		// Set shipment date and delivery date to UNIX time 0
+		// This is because we don't have the exact date
+		// Let it be empty is a big mistake because it will be set to 0001-01-01 00:00:00 +0000 UTC
+		// And it will cause a lot of problems
+		ShipmentDate: utils.ZeroUnixTime,
+		DeliveryDate: utils.ZeroUnixTime,
 		Note:         orderRecord.GetString("note"),
 		OrderId:      orderRecord.Id,
 		InvoiceId:    invoice.Id,
