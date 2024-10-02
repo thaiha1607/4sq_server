@@ -196,7 +196,6 @@ func AssignWarehouseStaff(dao *daos.Dao, logger *slog.Logger, orderRecord *model
 				logger.Error("Failed to save warehouse assignment", "error", err)
 				return nil
 			}
-			return nil
 		}
 		return nil
 	})
