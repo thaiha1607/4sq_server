@@ -71,8 +71,12 @@ func AssignWarehouseStaff(dao *daos.Dao, logger *slog.Logger, orderRecord *model
 		}
 		orderItemQty := orderItem.OrderedQty - orderItem.AssignedQty
 		for _, productQuantity := range productQuantities {
+			// If the order item quantity is 0, we break the loop
+			if orderItemQty == 0 {
+				break
+			}
 			// Because we sort by priority DESC, qty DESC, we need to check if the quantity is 0
-			if orderItemQty == 0 || productQuantity.Qty == 0 {
+			if productQuantity.Qty == 0 {
 				continue
 			}
 			assignedQty := min(orderItemQty, productQuantity.Qty)

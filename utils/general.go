@@ -50,7 +50,7 @@ var OrderStatusCodeTransitions = map[string][]string{
 	},
 	order_status.Delivered.ID(): {},
 	order_status.OnHold.ID(): {
-		order_status.Processing.ID(),
+		order_status.Confirmed.ID(),
 	},
 	order_status.FailedDeliveryAttempt.ID(): {
 		order_status.PartiallyDelivered.ID(),

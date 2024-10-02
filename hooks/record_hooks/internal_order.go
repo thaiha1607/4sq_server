@@ -55,6 +55,35 @@ func forbidInvalidInternalOrderStatus(app *pocketbase.PocketBase) {
 	})
 }
 
+func updateOrderWhenInternalOrderProcessing(app *pocketbase.PocketBase) {
+	app.OnRecordAfterUpdateRequest("internal_orders").Add(func(e *core.RecordUpdateEvent) error {
+		if e.Record.GetString("statusCodeId") != order_status.Processing.ID() {
+			return nil
+		}
+		err := app.Dao().RunInTransaction(func(txDao *daos.Dao) error {
+			order, err := dbquery.GetSingleOrder(txDao, e.Record.GetString("rootOrderId"))
+			if err != nil {
+				return apis.NewNotFoundError("", map[string]validation.Error{
+					"rootOrderId": validation.NewError("not_found", "Order not found"),
+				})
+			}
+			if order.StatusCodeId != order_status.Confirmed.ID() {
+				return nil
+			}
+			order.StatusCodeId = order_status.Processing.ID()
+			order.MarkAsNotNew()
+			if err := txDao.Save(order); err != nil {
+				return err
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
 func updateOrderItemWhenInternalOrderCancelled(app *pocketbase.PocketBase) {
 	app.OnRecordAfterUpdateRequest("internal_orders").Add(func(e *core.RecordUpdateEvent) error {
 		if e.Record.GetString("statusCodeId") != order_status.Cancelled.ID() {

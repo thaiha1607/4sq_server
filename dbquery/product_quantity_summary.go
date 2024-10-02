@@ -8,14 +8,14 @@ import (
 
 func GetSingleProductQuantitySummary(
 	dao *daos.Dao,
-	categoryId string,
+	id string,
 ) (
 	*custom_models.ProductQuantitySummary,
 	error,
 ) {
 	var productQuantitySummary *custom_models.ProductQuantitySummary
 	err := custom_models.ProductQuantitySummaryQuery(dao).
-		Where(dbx.HashExp{"categoryId": categoryId}).
+		Where(dbx.HashExp{"id": id}).
 		One(&productQuantitySummary)
 	if err != nil {
 		return nil, err
@@ -25,14 +25,17 @@ func GetSingleProductQuantitySummary(
 
 func GetBatchProductQuantitySummaries(
 	dao *daos.Dao,
-	categoryIds []string,
+	ids []string,
 ) (
 	[]*custom_models.ProductQuantitySummary,
 	error,
 ) {
 	var productQuantitySummaries []*custom_models.ProductQuantitySummary
-	err := custom_models.ProductQuantitySummaryQuery(dao).
-		Where(dbx.In("categoryId", categoryIds)).
+	query := custom_models.ProductQuantitySummaryQuery(dao)
+	for _, id := range ids {
+		query = query.OrWhere(dbx.HashExp{"id": id})
+	}
+	err := query.
 		All(&productQuantitySummaries)
 	if err != nil {
 		return nil, err

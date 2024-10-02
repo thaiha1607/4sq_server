@@ -50,14 +50,8 @@ func forbidInvalidOrderStatus(app *pocketbase.PocketBase) {
 }
 
 func assignWarehouseStaff(app *pocketbase.PocketBase) {
-	app.OnRecordBeforeUpdateRequest("orders").Add(func(e *core.RecordUpdateEvent) error {
-		old, err := dbquery.GetSingleOrder(app.Dao(), e.Record.Id)
-		if err != nil {
-			return apis.NewApiError(http.StatusInternalServerError, "Something happened on our end", nil)
-		}
-		// Only assign warehouse staffs when the order is changed from Pending to Confirmed
-		if old.StatusCodeId != order_status.Pending.ID() ||
-			e.Record.GetString("statusCodeId") != order_status.Confirmed.ID() {
+	app.OnRecordAfterUpdateRequest("orders").Add(func(e *core.RecordUpdateEvent) error {
+		if e.Record.GetString("statusCodeId") != order_status.Confirmed.ID() {
 			return nil
 		}
 		return shared.AssignWarehouseStaff(app.Dao(), app.Logger(), e.Record)
