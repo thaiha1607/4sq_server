@@ -12,7 +12,6 @@ type ShipmentAssignment struct {
 	models.BaseModel
 	Status     string `db:"status" json:"status"`
 	Note       string `db:"note" json:"note,omitempty"`
-	OtherInfo  string `db:"otherinfo" json:"otherInfo,omitempty"`
 	ShipmentId string `db:"shipmentid" json:"shipmentId"`
 	StaffId    string `db:"staffid" json:"staffId,omitempty"`
 }

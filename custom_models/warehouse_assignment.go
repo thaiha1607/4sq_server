@@ -12,7 +12,6 @@ type WarehouseAssignment struct {
 	models.BaseModel
 	Status          string `db:"status" json:"status"`
 	Note            string `db:"note" json:"note,omitempty"`
-	OtherInfo       string `db:"otherInfo" json:"otherInfo,omitempty"`
 	StaffId         string `db:"staffId" json:"staffId,omitempty"`
 	InternalOrderId string `db:"internalOrderId" json:"internalOrderId"`
 }

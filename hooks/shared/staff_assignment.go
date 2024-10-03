@@ -186,9 +186,7 @@ func AssignWarehouseStaff(dao *daos.Dao, logger *slog.Logger, orderRecord *model
 			// Get only one staff
 			selectedStaff := warehouseStaffs[0]
 			warehouseAssignment := &custom_models.WarehouseAssignment{
-				OtherInfo:       orderRecord.GetString("otherInfo"),
 				Status:          string(assignment_status.Assigned),
-				Note:            orderRecord.GetString("note"),
 				StaffId:         selectedStaff.Id,
 				InternalOrderId: internalOrderCreation.Id,
 			}

@@ -1846,20 +1846,6 @@
       },
       {
         "system": false,
-        "id": "17h2b2vj",
-        "name": "otherInfo",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
-        }
-      },
-      {
-        "system": false,
         "id": "mvjqphgb",
         "name": "shipmentId",
         "type": "relation",
@@ -2458,20 +2444,6 @@
         "system": false,
         "id": "gvim9fk7",
         "name": "note",
-        "type": "text",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "min": null,
-          "max": null,
-          "pattern": ""
-        }
-      },
-      {
-        "system": false,
-        "id": "kpj0ft8u",
-        "name": "otherInfo",
         "type": "text",
         "required": false,
         "presentable": false,

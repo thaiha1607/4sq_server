@@ -417,7 +417,6 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			staffIdx := rand.IntN(len(deliveryStaffs))
 			staffId := deliveryStaffs[staffIdx].Id
 			shipmentAssignment := &custom_models.ShipmentAssignment{
-				OtherInfo:  e.Record.GetString("otherInfo"),
 				Status:     string(assignment_status.Assigned),
 				ShipmentId: shipmentId,
 				StaffId:    staffId,

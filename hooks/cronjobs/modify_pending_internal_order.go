@@ -59,7 +59,7 @@ func modifyPendingInternalOrdersOlderThan5Days(app *pocketbase.PocketBase) {
 					}
 					for _, warehouseAssignment := range warehouseAssignments {
 						warehouseAssignment.Status = string(assignment_status.Cancelled)
-						warehouseAssignment.OtherInfo = "Hủy đơn hàng tự động do quá thời gian chờ xác nhận (5 ngày)"
+						warehouseAssignment.Note = "Hủy đơn hàng tự động do quá thời gian chờ xác nhận (5 ngày)"
 						if err := txDao.Save(warehouseAssignment); err != nil {
 							transactionErr = errors.Join(transactionErr, err)
 							continue
