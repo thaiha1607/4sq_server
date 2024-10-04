@@ -318,15 +318,28 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			); err != nil {
 				return err
 			}
+			shipment, err := dbquery.GetSingleShipment(app.Dao(), old.GetString("shipmentId"))
+			if err != nil {
+				app.Logger().Error("Failed to get shipment", "error", err)
+				return nil
+			}
+			if shipment.StatusCodeId == shipment_status.Pending.ID() {
+				shipment.StatusCodeId = shipment_status.Processed.ID()
+				shipment.MarkAsNotNew()
+				if err := app.Dao().Save(shipment); err != nil {
+					app.Logger().Error("Failed to save shipment", "error", err)
+					return nil
+				}
+			}
 
 		}
 		shipmentId := old.GetString("shipmentId")
-		internalOrders, err := dbquery.GetInternalOrdersByShipmentId(app.Dao(), shipmentId)
-		if err != nil || len(internalOrders) == 0 {
+		internalOrderRecords, err := dbquery.GetInternalOrdersByShipmentId(app.Dao(), shipmentId)
+		if err != nil || len(internalOrderRecords) == 0 {
 			app.Logger().Error("Failed to get internal orders", "error", err)
 			return nil
 		}
-		internalOrders = lo.DropWhile(internalOrders, func(internalOrder *custom_models.InternalOrder) bool {
+		internalOrders := lo.Reject(internalOrderRecords, func(internalOrder *custom_models.InternalOrder, _ int) bool {
 			return internalOrder.Id == e.Record.Id
 		})
 		allShippedInternalOrder := lo.Filter(internalOrders, func(internalOrder *custom_models.InternalOrder, _ int) bool {
@@ -343,31 +356,22 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			newModel.SetId(e.Record.Id)
 			allShippedInternalOrder = append(allShippedInternalOrder, newModel)
 		}
-		readyToDeliver := len(lo.Filter(internalOrders, func(internalOrder *custom_models.InternalOrder, _ int) bool {
-			allowedStatus := []string{
-				order_status.Pending.ID(),
-				order_status.Processing.ID(),
-				order_status.WaitingForAction.ID(),
-			}
-			return lo.Contains(allowedStatus, internalOrder.StatusCodeId)
-		})) == 0
+		readyToDeliver := len(
+			lo.Filter(internalOrders, func(internalOrder *custom_models.InternalOrder, _ int) bool {
+				allowedStatus := []string{
+					order_status.Pending.ID(),
+					order_status.Processing.ID(),
+					order_status.WaitingForAction.ID(),
+				}
+				return lo.Contains(allowedStatus, internalOrder.StatusCodeId)
+			},
+			),
+		) == 0
 		if !readyToDeliver {
 			return nil
 		}
 		app.Logger().Info("Assigning delivery staff", "shipmentId", shipmentId)
 		err = app.Dao().RunInTransaction(func(txDao *daos.Dao) error {
-			// Update shipment status to Processed
-			shipment, err := dbquery.GetSingleShipment(txDao, shipmentId)
-			if err != nil {
-				app.Logger().Error("Failed to get shipment", "error", err)
-				return nil
-			}
-			shipment.StatusCodeId = shipment_status.Processed.ID()
-			shipment.MarkAsNotNew()
-			if err := txDao.Save(shipment); err != nil {
-				app.Logger().Error("Failed to save shipment", "error", err)
-				return nil
-			}
 			// Create shipment items
 			shipmentItems := make(map[string]*custom_models.ShipmentItem)
 			for _, internalOrder := range allShippedInternalOrder {
@@ -400,6 +404,11 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			}
 			// Update shipment status to Shipped
 			fiveDaysLater, _ := types.ParseDateTime(time.Now().AddDate(0, 0, 5))
+			shipment, err := dbquery.GetSingleShipment(txDao, shipmentId)
+			if err != nil {
+				app.Logger().Error("Failed to get shipment", "error", err)
+				return nil
+			}
 			shipment.ShipmentDate = types.NowDateTime()
 			shipment.DeliveryDate = fiveDaysLater
 			shipment.StatusCodeId = shipment_status.Shipped.ID()
