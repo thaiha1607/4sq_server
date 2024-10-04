@@ -158,7 +158,7 @@ var ShipmentStatusCodeTransitions = map[string][]string{
 	},
 	shipment_status.Delivered.ID(): {},
 	shipment_status.FailedDeliveryAttempt.ID(): {
-		shipment_status.Delivered.ID(),
+		shipment_status.OutForDelivery.ID(),
 		shipment_status.Returned.ID(),
 		shipment_status.Cancelled.ID(),
 	},
