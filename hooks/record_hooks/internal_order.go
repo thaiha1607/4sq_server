@@ -381,6 +381,9 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 					return nil
 				}
 				for _, internalOrderItem := range internalOrderItems {
+					if internalOrderItem.Qty == 0 {
+						continue
+					}
 					key := shipmentId + internalOrderItem.OrderItemId
 					if _, ok := shipmentItems[key]; !ok {
 						shipmentItems[key] = &custom_models.ShipmentItem{
