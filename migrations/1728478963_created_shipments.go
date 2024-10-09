@@ -144,7 +144,7 @@ func init() {
 
 		return daos.New(db).SaveCollection(collection)
 	}, func(db dbx.Builder) error {
-		dao := daos.New(db);
+		dao := daos.New(db)
 
 		collection, err := dao.FindCollectionByNameOrId("0fvjhfcs9ig8nd8")
 		if err != nil {

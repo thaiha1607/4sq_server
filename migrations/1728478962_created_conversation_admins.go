@@ -70,7 +70,7 @@ func init() {
 
 		return daos.New(db).SaveCollection(collection)
 	}, func(db dbx.Builder) error {
-		dao := daos.New(db);
+		dao := daos.New(db)
 
 		collection, err := dao.FindCollectionByNameOrId("eblguzfwjtr5n6s")
 		if err != nil {

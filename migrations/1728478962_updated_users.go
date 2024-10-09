@@ -12,7 +12,7 @@ import (
 
 func init() {
 	m.Register(func(db dbx.Builder) error {
-		dao := daos.New(db);
+		dao := daos.New(db)
 
 		collection, err := dao.FindCollectionByNameOrId("_pb_users_auth_")
 		if err != nil {
@@ -30,7 +30,7 @@ func init() {
 		collection.DeleteRule = types.Pointer("id = @request.auth.id || @request.auth.role = \"manager\"")
 
 		if err := json.Unmarshal([]byte(`[
-			"CREATE INDEX ` + "`" + `idx_wb5EYuS` + "`" + ` ON ` + "`" + `users` + "`" + ` (` + "`" + `role` + "`" + `) WHERE ` + "`" + `role` + "`" + ` = 'staff'"
+			"CREATE INDEX `+"`"+`idx_wb5EYuS`+"`"+` ON `+"`"+`users`+"`"+` (`+"`"+`role`+"`"+`) WHERE `+"`"+`role`+"`"+` = 'staff'"
 		]`), &collection.Indexes); err != nil {
 			return err
 		}
@@ -122,7 +122,7 @@ func init() {
 
 		return dao.SaveCollection(collection)
 	}, func(db dbx.Builder) error {
-		dao := daos.New(db);
+		dao := daos.New(db)
 
 		collection, err := dao.FindCollectionByNameOrId("_pb_users_auth_")
 		if err != nil {
