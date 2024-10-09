@@ -6,7 +6,7 @@ import (
 	"example.com/4sq_server/utils/enum/invoice_status"
 	"example.com/4sq_server/utils/enum/order_status"
 	"example.com/4sq_server/utils/enum/shipment_status"
-	"github.com/pocketbase/pocketbase/tools/types"
+	"github.com/AlperRehaYAZGAN/postgresbase/tools/types"
 )
 
 const DeliveryOfficeID = "i2lkp732qf26rvg"

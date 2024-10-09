@@ -5,8 +5,8 @@ import (
 
 	"example.com/4sq_server/custom_models"
 	"example.com/4sq_server/utils"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/AlperRehaYAZGAN/postgresbase/daos"
+	"github.com/AlperRehaYAZGAN/postgresbase/models"
 )
 
 func CreateNewTransactionHistory(dao *daos.Dao, entityType string, r *models.Record) error {

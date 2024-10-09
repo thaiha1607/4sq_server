@@ -1,6 +1,6 @@
 package record_hooks
 
-import "github.com/pocketbase/pocketbase"
+import pocketbase "github.com/AlperRehaYAZGAN/postgresbase"
 
 func RegisterRecordHooks(app *pocketbase.PocketBase) {
 	forbidInvalidOrderStatus(app)

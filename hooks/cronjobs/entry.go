@@ -1,6 +1,6 @@
 package cronjobs
 
-import "github.com/pocketbase/pocketbase"
+import pocketbase "github.com/AlperRehaYAZGAN/postgresbase"
 
 func RegisterCronJobs(app *pocketbase.PocketBase) {
 	modifyPendingAndOnHoldInternalOrdersOlderThan5Days(app)

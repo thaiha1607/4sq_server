@@ -2,8 +2,8 @@ package dbquery
 
 import (
 	"example.com/4sq_server/custom_models"
+	"github.com/AlperRehaYAZGAN/postgresbase/daos"
 	"github.com/pocketbase/dbx"
-	"github.com/pocketbase/pocketbase/daos"
 )
 
 func GetOrderItemsByOrderId(dao *daos.Dao, orderId string) ([]*custom_models.OrderItem, error) {

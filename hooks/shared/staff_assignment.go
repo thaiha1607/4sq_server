@@ -12,8 +12,8 @@ import (
 	"example.com/4sq_server/utils/enum/order_type"
 	"example.com/4sq_server/utils/enum/shipment_status"
 	"example.com/4sq_server/utils/enum/shipment_type"
-	"github.com/pocketbase/pocketbase/daos"
-	"github.com/pocketbase/pocketbase/models"
+	"github.com/AlperRehaYAZGAN/postgresbase/daos"
+	"github.com/AlperRehaYAZGAN/postgresbase/models"
 	"github.com/samber/lo"
 )
 

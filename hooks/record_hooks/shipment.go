@@ -9,11 +9,11 @@ import (
 	"example.com/4sq_server/utils"
 	"example.com/4sq_server/utils/enum/order_status"
 	"example.com/4sq_server/utils/enum/shipment_status"
+	pocketbase "github.com/AlperRehaYAZGAN/postgresbase"
+	"github.com/AlperRehaYAZGAN/postgresbase/apis"
+	"github.com/AlperRehaYAZGAN/postgresbase/core"
+	"github.com/AlperRehaYAZGAN/postgresbase/daos"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/daos"
 	"github.com/samber/lo"
 )
 

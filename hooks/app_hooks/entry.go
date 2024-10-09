@@ -3,9 +3,9 @@ package app_hooks
 import (
 	"os"
 
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/core"
+	pocketbase "github.com/AlperRehaYAZGAN/postgresbase"
+	"github.com/AlperRehaYAZGAN/postgresbase/apis"
+	"github.com/AlperRehaYAZGAN/postgresbase/core"
 )
 
 func RegisterAppHooks(app *pocketbase.PocketBase) {

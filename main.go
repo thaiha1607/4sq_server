@@ -6,9 +6,8 @@ import (
 	"strings"
 
 	"example.com/4sq_server/hooks"
-	_ "example.com/4sq_server/migrations"
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/plugins/migratecmd"
+	pocketbase "github.com/AlperRehaYAZGAN/postgresbase"
+	"github.com/AlperRehaYAZGAN/postgresbase/plugins/migratecmd"
 )
 
 func main() {

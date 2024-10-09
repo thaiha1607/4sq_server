@@ -4,7 +4,7 @@ import (
 	"example.com/4sq_server/hooks/app_hooks"
 	"example.com/4sq_server/hooks/cronjobs"
 	"example.com/4sq_server/hooks/record_hooks"
-	"github.com/pocketbase/pocketbase"
+	pocketbase "github.com/AlperRehaYAZGAN/postgresbase"
 )
 
 // Register all hooks for the app
