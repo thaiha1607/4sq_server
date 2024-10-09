@@ -64,9 +64,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE INDEX `idx_wb5EYuS` ON `users` (`role`) WHERE `role` = 'staff'"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
     "createRule": "@request.auth.role = \"manager\" || @request.data.role = \"customer\"",
@@ -293,9 +291,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_KAmzy3O` ON `comments` (\n  `productId`,\n  `userId`\n)"
-    ],
+    "indexes": [],
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\" && @request.auth.role = 'customer'",
@@ -342,12 +338,10 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_PAsZnx1` ON `conversation_admins` (\n  `conversationId`,\n  `userId`\n)"
-    ],
-    "listRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
-    "viewRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
-    "createRule": "@request.data.conversationId.conversation_admins_via_conversationId.id:length < 1 || @request.auth.conversation_admins_via_userId.conversationId ?= @request.data.conversationId",
+    "indexes": [],
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
+    "createRule": "@request.auth.id != \"\"",
     "updateRule": null,
     "deleteRule": "userId = @request.auth.id",
     "options": {}
@@ -374,11 +368,11 @@
       }
     ],
     "indexes": [],
-    "listRule": "participants_via_conversationId.userId ?= @request.auth.id || conversation_admins_via_conversationId.userId ?= @request.auth.id",
-    "viewRule": "participants_via_conversationId.userId ?= @request.auth.id || conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "conversation_admins_via_conversationId.userId ?= @request.auth.id",
-    "deleteRule": "conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "updateRule": "@request.auth.id != \"\"",
+    "deleteRule": "@request.auth.id != \"\"",
     "options": {}
   },
   {
@@ -563,9 +557,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_3TMYpsm` ON `internal_order_items` (\n  `internalOrderId`,\n  `orderItemId`\n)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.internalOrderId.rootOrderId = @request.data.orderItemId.orderId",
@@ -768,9 +760,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_gS5MiNG` ON `invoice_line_items` (\n  `invoiceId`,\n  `orderItemId`\n)"
-    ],
+    "indexes": [],
     "listRule": "invoiceId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "invoiceId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "(@request.auth.role = \"manager\" || (@request.auth.id != '' && @request.data.invoiceId.type = 'pro_forma')) && @request.data.invoiceId.orderId = @request.data.orderItemId.orderId",
@@ -813,9 +803,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_hl4uZdG` ON `invoice_status_codes` (`statusCode`)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
     "createRule": null,
@@ -983,9 +971,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE INDEX `idx_VlOtvkK` ON `invoices` (`orderId`)"
-    ],
+    "indexes": [],
     "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "(@request.auth.role = \"manager\" && (@request.data.paidAmount:isset = false || @request.data.paidAmount <= totalAmount)) || (@request.auth.id != \"\" && @request.data.type = \"pro_forma\" && @request.data.paidAmount:isset = false)",
@@ -1064,11 +1050,11 @@
       }
     ],
     "indexes": [],
-    "listRule": "@request.auth.participants_via_userId.conversationId ?= participantId.conversationId",
-    "viewRule": "@request.auth.participants_via_userId.conversationId ?= participantId.conversationId",
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
     "createRule": "@request.auth.id != \"\"",
-    "updateRule": "participantId.userId = @request.auth.id || @request.auth.conversation_admins_via_userId.conversationId ?= participantId.conversationId",
-    "deleteRule": "participantId.userId = @request.auth.id || @request.auth.conversation_admins_via_userId.conversationId ?= participantId.conversationId",
+    "updateRule": "@request.auth.id != \"\"",
+    "deleteRule": "@request.auth.id != \"\"",
     "options": {}
   },
   {
@@ -1194,9 +1180,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_LGPiKG4` ON `order_items` (\n  `orderId`,\n  `productCategoryId`\n)"
-    ],
+    "indexes": [],
     "listRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && (@request.data.assignedQty:isset = false || @request.data.assignedQty = 0) && (@request.data.shippedQty:isset = false || @request.data.shippedQty = 0) && (@request.data.receivedQty:isset = false || @request.data.receivedQty = 0)",
@@ -1239,9 +1223,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_YhmYEHX` ON `order_status_codes` (`statusCode`)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
     "createRule": null,
@@ -1411,10 +1393,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE INDEX `idx_3Q3JUsm` ON `orders` (`creatorId`)",
-      "CREATE INDEX `idx_f4G2ru9` ON `orders` (`guestId`)"
-    ],
+    "indexes": [],
     "listRule": "creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\"",
@@ -1461,14 +1440,12 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_bJZA4H8` ON `participants` (\n  `conversationId`,\n  `userId`\n)"
-    ],
-    "listRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
-    "viewRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "indexes": [],
+    "listRule": "@request.auth.id != \"\"",
+    "viewRule": "@request.auth.id != \"\"",
     "createRule": "@request.auth.id != \"\"",
     "updateRule": null,
-    "deleteRule": "conversationId.participants_via_conversationId.userId ?= @request.auth.id || conversationId.conversation_admins_via_conversationId.userId ?= @request.auth.id",
+    "deleteRule": "@request.auth.id != \"\"",
     "options": {}
   },
   {
@@ -1524,9 +1501,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_Xa76LkK` ON `product_categories` (\n  `productId`,\n  `colourId`\n)"
-    ],
+    "indexes": [],
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1584,9 +1559,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE INDEX `idx_NZuOJuB` ON `product_images` (`productId`)"
-    ],
+    "indexes": [],
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1661,9 +1634,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_B2bqLvs` ON `product_quantities` (\n  `categoryId`,\n  `workingUnitId`\n)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
@@ -1952,9 +1923,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_1xHG7KZ` ON `shipment_items` (\n  `shipmentId`,\n  `orderItemId`\n)"
-    ],
+    "indexes": [],
     "listRule": "shipmentId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "viewRule": "shipmentId.orderId.creatorId = @request.auth.id || (@request.auth.id != \"\" && @request.auth.role != \"customer\")",
     "createRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\" && @request.data.shipmentId.orderId = @request.data.orderItemId.orderId",
@@ -1997,9 +1966,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_tbnOBcE` ON `shipment_status_codes` (`statusCode`)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
     "createRule": null,
@@ -2206,10 +2173,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_kikHSGl` ON `staff_info` (`userId`)",
-      "CREATE INDEX `idx_r696cdI` ON `staff_info` (`role`)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "viewRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "createRule": "@request.auth.role = \"manager\"",
@@ -2238,9 +2202,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_ZcKxUtS` ON `tags` (`name`)"
-    ],
+    "indexes": [],
     "listRule": "",
     "viewRule": "",
     "createRule": "@request.auth.role = \"manager\"",
@@ -2311,9 +2273,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE INDEX `idx_kcKC4Vm` ON `transaction_history` (\n  `entityType`,\n  `entityId`\n)"
-    ],
+    "indexes": [],
     "listRule": "@request.auth.id != \"\"",
     "viewRule": "@request.auth.id != \"\"",
     "createRule": null,
@@ -2403,9 +2363,7 @@
         }
       }
     ],
-    "indexes": [
-      "CREATE UNIQUE INDEX `idx_iLfx8Tu` ON `user_addresses` (\n  `userId`,\n  `addressId`\n)"
-    ],
+    "indexes": [],
     "listRule": "userId = @request.auth.id",
     "viewRule": "userId = @request.auth.id",
     "createRule": "@request.auth.id != \"\"",
@@ -2570,34 +2528,5 @@
     "updateRule": "@request.auth.id != \"\" && @request.auth.role != \"customer\"",
     "deleteRule": "@request.auth.role = \"manager\"",
     "options": {}
-  },
-  {
-    "id": "1hln2do3ca9mwaz",
-    "name": "product_quantity_summary",
-    "type": "view",
-    "system": false,
-    "schema": [
-      {
-        "system": false,
-        "id": "t7aymr5p",
-        "name": "totalQty",
-        "type": "json",
-        "required": false,
-        "presentable": false,
-        "unique": false,
-        "options": {
-          "maxSize": 1
-        }
-      }
-    ],
-    "indexes": [],
-    "listRule": "@request.auth.id != \"\"",
-    "viewRule": "@request.auth.id != \"\"",
-    "createRule": null,
-    "updateRule": null,
-    "deleteRule": null,
-    "options": {
-      "query": "SELECT categoryId as id, SUM(qty) AS totalQty\nFROM product_quantities\nGROUP BY categoryId;"
-    }
   }
 ]
