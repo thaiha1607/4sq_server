@@ -356,20 +356,36 @@ func assignDeliveryStaff(app *pocketbase.PocketBase) {
 			newModel.SetId(e.Record.Id)
 			allShippedInternalOrder = append(allShippedInternalOrder, newModel)
 		}
-		readyToDeliver := len(
-			lo.Filter(internalOrders, func(internalOrder *custom_models.InternalOrder, _ int) bool {
-				allowedStatus := []string{
-					order_status.Pending.ID(),
-					order_status.Processing.ID(),
-					order_status.WaitingForAction.ID(),
-				}
-				return lo.Contains(allowedStatus, internalOrder.StatusCodeId)
-			},
-			),
-		) == 0
+		readyToDeliver := lo.EveryBy(internalOrders, func(internalOrder *custom_models.InternalOrder) bool {
+			notReadyStatus := []string{
+				order_status.Pending.ID(),
+				order_status.Processing.ID(),
+				order_status.WaitingForAction.ID(),
+			}
+			return !lo.Contains(notReadyStatus, internalOrder.StatusCodeId)
+		})
+		allCancelled := lo.EveryBy(internalOrders, func(internalOrder *custom_models.InternalOrder) bool {
+			return internalOrder.StatusCodeId == order_status.Cancelled.ID()
+		})
 		if !readyToDeliver {
 			return nil
 		}
+		if allCancelled {
+			app.Logger().Info("All internal orders are cancelled", "shipmentId", shipmentId)
+			shipment, err := dbquery.GetSingleShipment(app.Dao(), shipmentId)
+			if err != nil {
+				app.Logger().Error("Failed to get shipment", "error", err)
+				return nil
+			}
+			shipment.StatusCodeId = shipment_status.Cancelled.ID()
+			shipment.MarkAsNotNew()
+			if err := app.Dao().Save(shipment); err != nil {
+				app.Logger().Error("Failed to save shipment", "error", err)
+				return nil
+			}
+			return nil
+		}
+
 		app.Logger().Info("Assigning delivery staff", "shipmentId", shipmentId)
 		err = app.Dao().RunInTransaction(func(txDao *daos.Dao) error {
 			// Create shipment items

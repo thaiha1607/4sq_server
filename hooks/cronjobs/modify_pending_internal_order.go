@@ -17,24 +17,25 @@ import (
 	"github.com/thaiha1607/4sq_server/utils/enum/order_status"
 )
 
-// Change pending internal orders older than 5 days to CANCELLED
-func modifyPendingInternalOrdersOlderThan5Days(app *pocketbase.PocketBase) {
+// Change pending and on hold internal orders older than 5 days to CANCELLED
+func modifyPendingAndOnHoldInternalOrdersOlderThan5Days(app *pocketbase.PocketBase) {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		scheduler := cron.New()
 
 		lastFiveDays := time.Now().AddDate(0, 0, -5).Format(types.DefaultDateLayout)
 
-		jobId := "modifyPendingInternalOrdersOlderThan5Days"
+		jobId := "modifyPendingAndOnHoldInternalOrdersOlderThan5Days"
 
 		scheduler.MustAdd(jobId, "0 4 * * 1-5", func() {
 			app.Logger().Info("Running job: " + jobId)
 			internalOrders := []*custom_models.InternalOrder{}
 			err := custom_models.InternalOrderQuery(app.Dao()).
 				Where(dbx.NewExp(
-					"statusCodeId = {:status} AND updated < {:date}",
+					"statusCodeId IN ({:pending_status}, {:on_hold_status}) AND updated < {:date}",
 					dbx.Params{
-						"status": order_status.Pending.ID(),
-						"date":   lastFiveDays,
+						"pending_status": order_status.Pending.ID(),
+						"on_hold_status": order_status.OnHold.ID(),
+						"date":           lastFiveDays,
 					},
 				)).
 				All(&internalOrders)
@@ -70,10 +71,10 @@ func modifyPendingInternalOrdersOlderThan5Days(app *pocketbase.PocketBase) {
 				return nil
 			})
 			if err != nil {
-				app.Logger().Error("Failed to modify pending internal orders older than 5 days", "error", err)
+				app.Logger().Error("Failed to modify pending and on hold internal orders older than 5 days", "error", err)
 				return
 			}
-			app.Logger().Info("Modified pending internal orders older than 5 days", slog.Int("count", count))
+			app.Logger().Info("Modified pending and on hold internal orders older than 5 days", slog.Int("count", count))
 		})
 		scheduler.Start()
 		return nil

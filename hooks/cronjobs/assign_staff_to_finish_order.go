@@ -15,27 +15,24 @@ import (
 	"github.com/thaiha1607/4sq_server/utils/enum/order_status"
 )
 
-func assignStaffToCompleteUnfinishedOrdersUpdatedMoreThanThreeDaysAgo(app *pocketbase.PocketBase) {
+func assignStaffToCompleteUnfinishedOrdersUpdatedMoreThan3DaysAgo(app *pocketbase.PocketBase) {
 	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
 		scheduler := cron.New()
 
 		lastThreeDays := time.Now().AddDate(0, 0, -3).Format(types.DefaultDateLayout)
 
-		jobId := "assignStaffToCompleteUnfinishedOrdersUpdatedMoreThanThreeDaysAgo"
+		jobId := "assignStaffToCompleteUnfinishedOrdersUpdatedMoreThan3DaysAgo"
 
 		scheduler.MustAdd(jobId, "0 4 * * 1-5", func() {
 			app.Logger().Info("Running job: " + jobId)
-			filteredStatus := []string{
-				order_status.PartiallyDelivered.ID(),
-				order_status.PartiallyShipped.ID(),
-			}
 			orderRecords, err := app.Dao().FindRecordsByExpr(
 				"orders",
 				dbx.NewExp(
-					"statusCodeId IN {:status} AND updated < {:date}",
+					"statusCodeId IN ({:partial_delivered}, {:partial_shipped}) AND updated < {:date}",
 					dbx.Params{
-						"status": filteredStatus,
-						"date":   lastThreeDays,
+						"partial_delivered": order_status.PartiallyDelivered.ID(),
+						"partial_shipped":   order_status.PartiallyShipped.ID(),
+						"date":              lastThreeDays,
 					},
 				),
 			)
@@ -57,14 +54,71 @@ func assignStaffToCompleteUnfinishedOrdersUpdatedMoreThanThreeDaysAgo(app *pocke
 			})
 			if err != nil {
 				app.Logger().Error(
-					"Error assigning staff to complete unfinished orders updated more than three days ago",
+					"Error assigning staff to complete unfinished orders updated more than 3 days ago",
 					"err",
 					err,
 				)
 				return
 			}
 
-			app.Logger().Info("Modified pending internal orders older than 48 hours", slog.Int("count", count))
+			app.Logger().Info("Modified pending internal orders older than 3 days", slog.Int("count", count))
+		})
+
+		scheduler.Start()
+		return nil
+	})
+}
+
+func assignStaffToCompleteConfirmedAndProcessingOrdersThatHaveAllInternalOrdersCancelledUpdatedMoreThan3DaysAgo(
+	app *pocketbase.PocketBase,
+) {
+	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		scheduler := cron.New()
+
+		threeDaysAgo := time.Now().AddDate(0, 0, -3).Format(types.DefaultDateLayout)
+
+		jobId := "assignStaffToCompleteConfirmedAndProcessingOrdersThatHaveAllInternalOrdersCancelledUpdatedMoreThan3DaysAgo"
+
+		scheduler.MustAdd(jobId, "0 5 * * 1-5", func() {
+			app.Logger().Info("Running job: " + jobId)
+			orderRecords, err := app.Dao().FindRecordsByExpr(
+				"orders",
+				dbx.NewExp(
+					"statusCodeId IN ({:confirmed}, {:processing}) AND updated < {:date} AND id NOT IN (SELECT rootOrderId FROM internal_orders WHERE statusCodeId != {:cancelled})",
+					dbx.Params{
+						"confirmed":  order_status.Confirmed.ID(),
+						"processing": order_status.Processing.ID(),
+						"date":       threeDaysAgo,
+						"cancelled":  order_status.Cancelled.ID(),
+					},
+				),
+			)
+			if err != nil {
+				return
+			}
+			count := 0
+			err = app.Dao().RunInTransaction(func(txDao *daos.Dao) error {
+				var transactionErr error = nil
+				for _, orderRecord := range orderRecords {
+					assignStaffErr := shared.AssignWarehouseStaff(txDao, app.Logger(), orderRecord)
+					if assignStaffErr != nil {
+						transactionErr = errors.Join(transactionErr, assignStaffErr)
+					} else {
+						count++
+					}
+				}
+				return transactionErr
+			})
+			if err != nil {
+				app.Logger().Error(
+					"Error assigning staff to complete confirmed and processing orders that have all internal orders cancelled",
+					"err",
+					err,
+				)
+				return
+			}
+
+			app.Logger().Info("Modified confirmed and processing orders with all internal orders cancelled", slog.Int("count", count))
 		})
 
 		scheduler.Start()
