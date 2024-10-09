@@ -1,14 +1,14 @@
 package record_hooks
 
 import (
+	"example.com/4sq_server/custom_models"
+	"example.com/4sq_server/utils"
+	"example.com/4sq_server/utils/enum/invoice_status"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/samber/lo"
-	"github.com/thaiha1607/4sq_server/custom_models"
-	"github.com/thaiha1607/4sq_server/utils"
-	"github.com/thaiha1607/4sq_server/utils/enum/invoice_status"
 )
 
 func forbidInvalidInvoiceStatus(app *pocketbase.PocketBase) {

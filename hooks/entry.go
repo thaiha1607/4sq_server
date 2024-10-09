@@ -1,10 +1,10 @@
 package hooks
 
 import (
+	"example.com/4sq_server/hooks/app_hooks"
+	"example.com/4sq_server/hooks/cronjobs"
+	"example.com/4sq_server/hooks/record_hooks"
 	"github.com/pocketbase/pocketbase"
-	"github.com/thaiha1607/4sq_server/hooks/app_hooks"
-	"github.com/thaiha1607/4sq_server/hooks/cronjobs"
-	"github.com/thaiha1607/4sq_server/hooks/record_hooks"
 )
 
 // Register all hooks for the app

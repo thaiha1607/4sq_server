@@ -1,9 +1,9 @@
 package dbquery
 
 import (
+	"example.com/4sq_server/custom_models"
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase/daos"
-	"github.com/thaiha1607/4sq_server/custom_models"
 )
 
 func GetInternalOrderItemsByInternalOrderId(dao *daos.Dao, internalOrderId string) ([]*custom_models.InternalOrderItem, error) {

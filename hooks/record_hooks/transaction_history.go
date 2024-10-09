@@ -3,11 +3,11 @@ package record_hooks
 import (
 	"net/http"
 
+	"example.com/4sq_server/dbquery"
+	"example.com/4sq_server/utils"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
-	"github.com/thaiha1607/4sq_server/dbquery"
-	"github.com/thaiha1607/4sq_server/utils"
 )
 
 func addTransactionHistoryHooks(app *pocketbase.PocketBase) {

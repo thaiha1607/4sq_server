@@ -3,10 +3,10 @@ package utils
 import (
 	"time"
 
+	"example.com/4sq_server/utils/enum/invoice_status"
+	"example.com/4sq_server/utils/enum/order_status"
+	"example.com/4sq_server/utils/enum/shipment_status"
 	"github.com/pocketbase/pocketbase/tools/types"
-	"github.com/thaiha1607/4sq_server/utils/enum/invoice_status"
-	"github.com/thaiha1607/4sq_server/utils/enum/order_status"
-	"github.com/thaiha1607/4sq_server/utils/enum/shipment_status"
 )
 
 const DeliveryOfficeID = "i2lkp732qf26rvg"

@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
+	"example.com/4sq_server/hooks"
+	_ "example.com/4sq_server/migrations"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/plugins/migratecmd"
-	"github.com/thaiha1607/4sq_server/hooks"
-	_ "github.com/thaiha1607/4sq_server/migrations"
 )
 
 func main() {

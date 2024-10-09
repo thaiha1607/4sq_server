@@ -1,4 +1,4 @@
-module github.com/thaiha1607/4sq_server
+module example.com/4sq_server
 
 go 1.23.0
 
